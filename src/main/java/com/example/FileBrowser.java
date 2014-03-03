@@ -3,6 +3,8 @@ package com.example;
 import javax.swing.*;
 import java.awt.*;
 
+import static com.example.Defaults.*;
+
 /**
  * @author innokenty
  */
@@ -11,9 +13,9 @@ public class FileBrowser extends JFrame {
     public FileBrowser() throws HeadlessException {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
 
-        setTitle("Example File Browser");
-        setSize(new Dimension(Defaults.APP_WIDTH, Defaults.APP_HEIGHT));
-        setMinimumSize(new Dimension(Defaults.APP_MIN_WIDTH, Defaults.APP_MIN_HEIGHT));
+        setTitle(APP_TITLE);
+        setSize(new Dimension(APP_WIDTH, APP_HEIGHT));
+        setMinimumSize(new Dimension(APP_MIN_WIDTH, APP_MIN_HEIGHT));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
