@@ -7,6 +7,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 
 import static java.awt.event.KeyEvent.VK_ENTER;
 import static javax.swing.KeyStroke.getKeyStroke;
@@ -17,6 +18,8 @@ import static javax.swing.KeyStroke.getKeyStroke;
 public class FileList extends JList<File> {
 
     private static final String OPEN_FOLDER_KEY = "openFolder";
+
+    private final FilePreviewFactory previewFactory = new FilePreviewFactory();
 
     private boolean showHiddenFiles = Defaults.SHOW_HIDDEN_FILES;
 
@@ -31,8 +34,8 @@ public class FileList extends JList<File> {
         currentFolder = startingFolder;
         //noinspection unchecked
         setCellRenderer(filenameCellRenderer());
-        openSelectedFolderOnEnter();
-        openSelectedFolderOnDoubleClick();
+        openSelectedOnEnter();
+        openSelectedOnDoubleClick();
         render();
     }
 
@@ -57,35 +60,52 @@ public class FileList extends JList<File> {
         };
     }
 
-    private void openSelectedFolderOnEnter() {
+    private void openSelectedOnEnter() {
         KeyStroke enterKeyStroke = getKeyStroke(VK_ENTER, 0);
         super.getInputMap().put(enterKeyStroke, OPEN_FOLDER_KEY);
-        super.getActionMap().put(OPEN_FOLDER_KEY, openSelectedFolderAction());
+        super.getActionMap().put(OPEN_FOLDER_KEY, openSelectedAction());
     }
 
-    private AbstractAction openSelectedFolderAction() {
+    private AbstractAction openSelectedAction() {
         return new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    openSelectedFolder();
-                }
-            };
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                openSelected();
+            }
+        };
     }
 
-    private void openSelectedFolderOnDoubleClick() {
+    private void openSelectedOnDoubleClick() {
         super.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
-                    openSelectedFolder();
+                    openSelected();
                 }
             }
         });
     }
 
-    public synchronized void openSelectedFolder() {
-        currentFolder = super.getSelectedValue();
-        render();
+    public synchronized void openSelected() {
+        File selectedFile = super.getSelectedValue();
+        if (selectedFile.isDirectory()) {
+            currentFolder = selectedFile;
+            render();
+        } else {
+            try {
+                FilePreview preview = previewFactory.getPreviewDialogFor(selectedFile);
+                if (preview != null) {
+                    preview.setVisible(true);
+                }
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "An error occurred while loading file",
+                        e.getMessage(),
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
+        }
     }
 
     private void render() {
