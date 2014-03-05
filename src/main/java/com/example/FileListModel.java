@@ -57,6 +57,7 @@ class FileListModel extends DefaultListModel<File> {
         for (File file : listFiles()) {
             super.addElement(file);
         }
+        super.fireContentsChanged(this, 0, size());
     }
 
     private File[] listFiles() {
