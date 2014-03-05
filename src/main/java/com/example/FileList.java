@@ -32,8 +32,8 @@ public class FileList extends JList<File> {
         super(dataModel);
         //noinspection unchecked
         setCellRenderer(filenameCellRenderer());
-        openSelectedOnEnter();
-        openSelectedOnDoubleClick();
+        initOpeningSelectedOnEnter();
+        initOpeningSelectedOnDoubleClick();
     }
 
     private static File getDefaultStartingFolder() {
@@ -43,6 +43,9 @@ public class FileList extends JList<File> {
                 ? new File(homeDirPath)
                 : new File(System.getProperty("user.dir"));
     }
+
+
+    /* OVERRIDE METHODS WORKING WITH MODEL */
 
     /**
      * @param model only model of type com.example.FileListModel is supported
@@ -64,85 +67,8 @@ public class FileList extends JList<File> {
         return (FileListModel) super.getModel();
     }
 
-    private static ListCellRenderer filenameCellRenderer() {
-        return new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(
-                    JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus
-            ) {
-                String fileName = ((File) value).getName();
-                return super.getListCellRendererComponent(
-                        list, fileName, index, isSelected, cellHasFocus);
-            }
-        };
-    }
 
-    private void openSelectedOnEnter() {
-        KeyStroke enterKeyStroke = getKeyStroke(VK_ENTER, 0);
-        super.getInputMap().put(enterKeyStroke, OPEN_FOLDER_KEY);
-        super.getActionMap().put(OPEN_FOLDER_KEY, openSelectedAction());
-    }
-
-    private AbstractAction openSelectedAction() {
-        return new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                openSelected();
-            }
-        };
-    }
-
-    private void openSelectedOnDoubleClick() {
-        super.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
-                    openSelected();
-                }
-            }
-        });
-    }
-
-    public synchronized void openSelected() {
-        File selectedFile = super.getSelectedValue();
-        if (selectedFile.isDirectory()) {
-            getModel().openFolder(selectedFile);
-        } else {
-            try {
-                showFilePreview(selectedFile);
-            } catch (IOException e) {
-                reportFileTypeNotSupported(e);
-            }
-        }
-    }
-
-    private void showFilePreview(File selectedFile) throws IOException {
-        FilePreview preview = previewFactory.getPreviewDialogFor(selectedFile);
-        if (preview != null) {
-            preview.setLocationRelativeTo(this);
-            preview.setVisible(true);
-        } else {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Opening this type of files is not supported.",
-                    "Sorry, bro...",
-                    JOptionPane.ERROR_MESSAGE,
-                    new ImageIcon(this.getClass().getClassLoader()
-                            .getResource("img/sorry-bro.jpg"))
-            );
-        }
-    }
-
-    private void reportFileTypeNotSupported(IOException e) {
-        JOptionPane.showMessageDialog(
-                this,
-                "Oooops!",
-                e.getMessage(),
-                JOptionPane.ERROR_MESSAGE,
-                new ImageIcon(this.getClass().getClassLoader()
-                        .getResource("img/oops.jpg"))
-        );
-    }
+    /* DELEGATE MODEL METHODS */
 
     public boolean canGoUp() {
         return getModel().canGoUp();
@@ -158,5 +84,93 @@ public class FileList extends JList<File> {
 
     public void toggleShowHiddenFiles() {
         getModel().toggleShowHiddenFiles();
+    }
+
+
+    /* GUI INITIALIZATION METHODS */
+
+    private static ListCellRenderer filenameCellRenderer() {
+        return new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(
+                    JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus
+            ) {
+                String fileName = ((File) value).getName();
+                return super.getListCellRendererComponent(
+                        list, fileName, index, isSelected, cellHasFocus);
+            }
+        };
+    }
+
+    private void initOpeningSelectedOnEnter() {
+        KeyStroke enterKeyStroke = getKeyStroke(VK_ENTER, 0);
+        super.getInputMap().put(enterKeyStroke, OPEN_FOLDER_KEY);
+        super.getActionMap().put(OPEN_FOLDER_KEY, openSelectedAction());
+    }
+
+    private AbstractAction openSelectedAction() {
+        return new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                openSelected();
+            }
+        };
+    }
+
+    private void initOpeningSelectedOnDoubleClick() {
+        super.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    openSelected();
+                }
+            }
+        });
+    }
+
+    private synchronized void openSelected() {
+        File selectedFile = super.getSelectedValue();
+        if (selectedFile.isDirectory()) {
+            getModel().openFolder(selectedFile);
+        } else {
+            try {
+                showFilePreview(selectedFile);
+            } catch (IOException e) {
+                reportUnableToOpenFile(e);
+            }
+        }
+    }
+
+    private void showFilePreview(File selectedFile) throws IOException {
+        FilePreview preview = previewFactory.getPreviewDialogFor(selectedFile);
+        if (preview != null) {
+            preview.setLocationRelativeTo(this);
+            preview.setVisible(true);
+        } else {
+            showFilePreviewNotSupportedError();
+        }
+    }
+
+
+    /* DIALOG INVOCATION METHODS */
+
+    private void showFilePreviewNotSupportedError() {
+        JOptionPane.showMessageDialog(
+                this,
+                "Opening this type of files is not supported.",
+                "Sorry, bro...",
+                JOptionPane.ERROR_MESSAGE,
+                Icon.SORRY_BRO.build()
+        );
+    }
+
+    private void reportUnableToOpenFile(IOException e) {
+        JOptionPane.showMessageDialog(
+                this,
+                "Oooops!",
+                e.getMessage(),
+                JOptionPane.ERROR_MESSAGE,
+                Icon.OOPS.build()
+        );
     }
 }
