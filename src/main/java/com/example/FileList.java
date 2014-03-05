@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 
 import static java.awt.event.KeyEvent.VK_ENTER;
@@ -21,22 +20,20 @@ public class FileList extends JList<File> {
 
     private final FilePreviewFactory previewFactory = new FilePreviewFactory();
 
-    private boolean showHiddenFiles = Defaults.SHOW_HIDDEN_FILES;
-
-    private File currentFolder;
-
     public FileList() {
         this(getDefaultStartingFolder());
     }
 
     public FileList(File startingFolder) {
-        super();
-        currentFolder = startingFolder;
+        this(new FileListModel(startingFolder));
+    }
+
+    public FileList(FileListModel dataModel) {
+        super(dataModel);
         //noinspection unchecked
         setCellRenderer(filenameCellRenderer());
         openSelectedOnEnter();
         openSelectedOnDoubleClick();
-        render();
     }
 
     private static File getDefaultStartingFolder() {
@@ -45,6 +42,26 @@ public class FileList extends JList<File> {
         return homeDirPath != null || new File(homeDirPath).isDirectory()
                 ? new File(homeDirPath)
                 : new File(System.getProperty("user.dir"));
+    }
+
+    /**
+     * @param model only model of type com.example.FileListModel is supported
+     * @throws java.lang.IllegalArgumentException if the passed model is not
+     *          instance of com.example.FileListModel
+     */
+    @Override
+    public void setModel(ListModel<File> model) {
+        if (model instanceof FileListModel) {
+            super.setModel(model);
+        } else {
+            throw new IllegalArgumentException("Only model of type " +
+                    "com.example.FileListModel is supported");
+        }
+    }
+
+    @Override
+    public FileListModel getModel() {
+        return (FileListModel) super.getModel();
     }
 
     private static ListCellRenderer filenameCellRenderer() {
@@ -89,8 +106,7 @@ public class FileList extends JList<File> {
     public synchronized void openSelected() {
         File selectedFile = super.getSelectedValue();
         if (selectedFile.isDirectory()) {
-            currentFolder = selectedFile;
-            render();
+            getModel().openFolder(selectedFile);
         } else {
             try {
                 showFilePreview(selectedFile);
@@ -128,25 +144,19 @@ public class FileList extends JList<File> {
         );
     }
 
-    private void render() {
-        super.setListData(currentFolder.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File file) {
-                return showHiddenFiles || !file.isHidden();
-            }
-        }));
+    public boolean canGoUp() {
+        return getModel().canGoUp();
+    }
+
+    public void goUp() {
+        getModel().goUp();
     }
 
     public void setShowHiddenFiles(boolean showHiddenFiles) {
-        if (this.showHiddenFiles != showHiddenFiles) {
-            this.showHiddenFiles = showHiddenFiles;
-            render();
-        } else {
-            this.showHiddenFiles = showHiddenFiles;
-        }
+        getModel().setShowHiddenFiles(showHiddenFiles);
     }
 
     public void toggleShowHiddenFiles() {
-        setShowHiddenFiles(!showHiddenFiles);
+        getModel().toggleShowHiddenFiles();
     }
 }
