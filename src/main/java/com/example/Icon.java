@@ -7,7 +7,9 @@ import javax.swing.*;
  */
 enum Icon {
     OOPS("img/oops.png"),
-    SORRY_BRO("img/sorry-bro.jpg");
+    SORRY_BRO("img/sorry-bro.jpg"),
+    UP("img/up.png"),
+    GHOST("img/ghost.png");
 
     private final String resourceName;
 

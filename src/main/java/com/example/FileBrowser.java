@@ -22,6 +22,7 @@ public class FileBrowser extends JFrame {
         FileList fileList = new FileList();
         add(new JScrollPane(fileList), BorderLayout.CENTER);
         setJMenuBar(new FileBrowserMenuBar(fileList));
+        add(new FileBrowserToolbar(fileList), BorderLayout.NORTH);
     }
 
     public static void main(String[] args) {
