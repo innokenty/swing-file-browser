@@ -154,6 +154,7 @@ public class FileList extends JList<File> {
 
     /* DIALOG INVOCATION METHODS */
 
+    // TODO fix image sizes
     private void showFilePreviewNotSupportedError() {
         JOptionPane.showMessageDialog(
                 this,
