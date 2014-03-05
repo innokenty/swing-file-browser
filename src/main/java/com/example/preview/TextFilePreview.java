@@ -1,4 +1,4 @@
-package com.example;
+package com.example.preview;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +10,7 @@ import static java.util.Arrays.asList;
 /**
  * @author innokenty
  */
-public class TextFilePreview extends FilePreview {
+class TextFilePreview extends FilePreview {
 
     protected static final java.util.List<String> SUPPORTED_EXTENSIONS = asList(
             "", "txt", "log", "xml", "html", "java", "properties"

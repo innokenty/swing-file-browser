@@ -5,7 +5,7 @@ import javax.swing.*;
 /**
  * @author innokenty
  */
-enum Icon {
+public enum Icon {
     OOPS("img/oops.png"),
     SORRY_BRO("img/sorry-bro.jpg"),
     UP("img/up.png"),

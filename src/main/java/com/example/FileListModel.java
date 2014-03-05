@@ -7,7 +7,7 @@ import java.io.FileFilter;
 /**
  * @author innokenty
  */
-class FileListModel extends DefaultListModel<File> {
+public class FileListModel extends DefaultListModel<File> {
 
     private boolean showHiddenFiles = Defaults.SHOW_HIDDEN_FILES;
 

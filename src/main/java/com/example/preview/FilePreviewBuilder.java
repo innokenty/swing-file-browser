@@ -1,4 +1,4 @@
-package com.example;
+package com.example.preview;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.io.IOException;
 /**
  * @author innokenty
  */
-public interface FilePreviewBuilder {
+interface FilePreviewBuilder {
 
     boolean supportsExtension(String extension);
 

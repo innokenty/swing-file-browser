@@ -1,5 +1,8 @@
 package com.example;
 
+import com.example.preview.FilePreview;
+import com.example.preview.FilePreviewFactory;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
