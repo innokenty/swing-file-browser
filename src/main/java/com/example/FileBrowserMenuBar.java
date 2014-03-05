@@ -10,24 +10,24 @@ import java.awt.event.ItemListener;
 public class FileBrowserMenuBar extends JMenuBar {
 
     public FileBrowserMenuBar(FileList fileList) {
-        super.add(initFileMenu());
-        super.add(initViewMenu(fileList));
+        super.add(buildFileMenu());
+        super.add(buildViewMenu(fileList));
     }
 
-    private JMenu initFileMenu() {
+    private JMenu buildFileMenu() {
         JMenu file = new JMenu("File");
         file.setMnemonic('f');
         return file;
     }
 
-    private JMenu initViewMenu(final FileList fileList) {
+    private JMenu buildViewMenu(final FileList fileList) {
         JMenu view = new JMenu("View");
         view.setMnemonic('v');
-        view.add(initShowHiddenFilesItem(fileList));
+        view.add(buildShowHiddenFilesItem(fileList));
         return view;
     }
 
-    private JCheckBoxMenuItem initShowHiddenFilesItem(final FileList fileList) {
+    private JCheckBoxMenuItem buildShowHiddenFilesItem(final FileList fileList) {
         JCheckBoxMenuItem showHiddenFilesItem = new JCheckBoxMenuItem(
                 "Show hidden files", Defaults.SHOW_HIDDEN_FILES
         );
