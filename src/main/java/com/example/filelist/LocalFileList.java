@@ -1,4 +1,4 @@
-package com.example;
+package com.example.filelist;
 
 import com.example.preview.FilePreview;
 import com.example.preview.FilePreviewFactory;
@@ -17,22 +17,14 @@ import static javax.swing.KeyStroke.getKeyStroke;
 /**
  * @author innokenty
  */
-public class FileList extends JList<File> {
+public class LocalFileList extends JList<File> implements FileList {
 
-    private static final String OPEN_FOLDER_KEY = "openFolder";
-
-    private final FilePreviewFactory previewFactory = new FilePreviewFactory();
-
-    public FileList() {
+    public LocalFileList() {
         this(getDefaultStartingFolder());
     }
 
-    public FileList(File startingFolder) {
-        this(new FileListModel(startingFolder));
-    }
-
-    public FileList(FileListModel dataModel) {
-        super(dataModel);
+    public LocalFileList(File startingFolder) {
+        super(new LocalFileListModel(startingFolder));
         //noinspection unchecked
         setCellRenderer(filenameCellRenderer());
         initOpeningSelectedOnEnter();
@@ -48,45 +40,43 @@ public class FileList extends JList<File> {
     }
 
 
-    /* OVERRIDE METHODS WORKING WITH MODEL */
+    /* MODEL METHODS OVERRIDING */
 
     /**
-     * @param model only model of type com.example.FileListModel is supported
+     * @param model only model of type com.example.filelist.FileListModel is supported
      * @throws java.lang.IllegalArgumentException if the passed model is not
-     *          instance of com.example.FileListModel
+     *          instance of com.example.filelist.FileListModel
      */
     @Override
     public void setModel(ListModel<File> model) {
-        if (model instanceof FileListModel) {
+        if (model instanceof LocalFileListModel) {
             super.setModel(model);
         } else {
             throw new IllegalArgumentException("Only model of type " +
-                    "com.example.FileListModel is supported");
+                    "com.example.filelist.FileListModel is supported");
         }
     }
 
     @Override
-    public FileListModel getModel() {
-        return (FileListModel) super.getModel();
+    public LocalFileListModel getModel() {
+        return (LocalFileListModel) super.getModel();
     }
 
 
-    /* DELEGATE MODEL METHODS */
+    /* OTHER INTERFACE IMPLEMENTATION METHODS */
 
-    public boolean canGoUp() {
-        return getModel().canGoUp();
-    }
-
-    public void goUp() {
-        getModel().goUp();
-    }
-
-    public void setShowHiddenFiles(boolean showHiddenFiles) {
-        getModel().setShowHiddenFiles(showHiddenFiles);
-    }
-
-    public void toggleShowHiddenFiles() {
-        getModel().toggleShowHiddenFiles();
+    @Override
+    public synchronized void openSelected() {
+        File selectedFile = super.getSelectedValue();
+        if (selectedFile.isDirectory()) {
+            getModel().openFolder(selectedFile);
+        } else {
+            try {
+                showFilePreview(selectedFile);
+            } catch (IOException e) {
+                reportUnableToOpenFile(e);
+            }
+        }
     }
 
 
@@ -106,9 +96,10 @@ public class FileList extends JList<File> {
     }
 
     private void initOpeningSelectedOnEnter() {
+        final String openFolderKey = "openFolder";
         KeyStroke enterKeyStroke = getKeyStroke(VK_ENTER, 0);
-        super.getInputMap().put(enterKeyStroke, OPEN_FOLDER_KEY);
-        super.getActionMap().put(OPEN_FOLDER_KEY, openSelectedAction());
+        super.getInputMap().put(enterKeyStroke, openFolderKey);
+        super.getActionMap().put(openFolderKey, openSelectedAction());
     }
 
     private AbstractAction openSelectedAction() {
@@ -131,21 +122,8 @@ public class FileList extends JList<File> {
         });
     }
 
-    private synchronized void openSelected() {
-        File selectedFile = super.getSelectedValue();
-        if (selectedFile.isDirectory()) {
-            getModel().openFolder(selectedFile);
-        } else {
-            try {
-                showFilePreview(selectedFile);
-            } catch (IOException e) {
-                reportUnableToOpenFile(e);
-            }
-        }
-    }
-
     private void showFilePreview(File selectedFile) throws IOException {
-        FilePreview preview = previewFactory.getPreviewDialogFor(selectedFile);
+        FilePreview preview = new FilePreviewFactory().getPreviewDialogFor(selectedFile);
         if (preview != null) {
             preview.setLocationRelativeTo(this);
             preview.setVisible(true);
@@ -164,7 +142,7 @@ public class FileList extends JList<File> {
                 "Opening this type of files is not supported.",
                 "Sorry, bro...",
                 JOptionPane.ERROR_MESSAGE,
-                Icon.SORRY_BRO.build()
+                com.example.Icon.SORRY_BRO.build()
         );
     }
 
@@ -174,7 +152,7 @@ public class FileList extends JList<File> {
                 "Oooops!",
                 e.getMessage(),
                 JOptionPane.ERROR_MESSAGE,
-                Icon.OOPS.build()
+                com.example.Icon.OOPS.build()
         );
     }
 }

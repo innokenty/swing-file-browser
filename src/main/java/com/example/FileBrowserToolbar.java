@@ -1,5 +1,7 @@
 package com.example;
 
+import com.example.filelist.FileList;
+import com.example.filelist.FileListModel;
 import com.example.utils.AbstractListDataListener;
 
 import javax.swing.*;
@@ -15,38 +17,39 @@ import java.awt.event.ItemListener;
 public class FileBrowserToolbar extends JToolBar {
 
     public FileBrowserToolbar(FileList fileList) {
-        super.add(buildGoUpButton(fileList));
-        super.add(buildShowHiddenFilesButton(fileList));
+        FileListModel model = fileList.getModel();
+        super.add(buildGoUpButton(model));
+        super.add(buildShowHiddenFilesButton(model));
         // TODO fix image sizes
     }
 
-    private JButton buildGoUpButton(final FileList fileList) {
+    private JButton buildGoUpButton(final FileListModel model) {
         final JButton button = new JButton(Icon.UP.build());
         button.setToolTipText("go up one folder");
-        button.setEnabled(fileList.canGoUp());
-        fileList.getModel().addListDataListener(new AbstractListDataListener() {
+        button.setEnabled(model.canGoUp());
+        model.addListDataListener(new AbstractListDataListener() {
             @Override
             public void contentsChanged(ListDataEvent e) {
-                button.setEnabled(fileList.canGoUp());
+                button.setEnabled(model.canGoUp());
             }
         });
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                fileList.goUp();
+                model.goUp();
             }
         });
         return button;
     }
 
-    private JToggleButton buildShowHiddenFilesButton(final FileList fileList) {
+    private JToggleButton buildShowHiddenFilesButton(final FileListModel model) {
         JToggleButton button = new JToggleButton(
                 Icon.GHOST.build(), Defaults.SHOW_HIDDEN_FILES);
         button.setToolTipText("show/hide hidden files");
         button.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                fileList.toggleShowHiddenFiles();
+                model.toggleShowHiddenFiles();
             }
         });
         return button;

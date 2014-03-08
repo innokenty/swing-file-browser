@@ -1,4 +1,6 @@
-package com.example;
+package com.example.filelist;
+
+import com.example.Defaults;
 
 import javax.swing.*;
 import java.io.File;
@@ -7,16 +9,17 @@ import java.io.FileFilter;
 /**
  * @author innokenty
  */
-public class FileListModel extends DefaultListModel<File> {
+class LocalFileListModel extends DefaultListModel<File> implements FileListModel {
 
     private boolean showHiddenFiles = Defaults.SHOW_HIDDEN_FILES;
 
     private File currentFolder;
 
-    public FileListModel(File currentFolder) {
+    public LocalFileListModel(File currentFolder) {
         openFolder(currentFolder);
     }
 
+    @Override
     public void openFolder(File folder) {
         if (folder.isDirectory()) {
             this.currentFolder = folder;
@@ -27,10 +30,12 @@ public class FileListModel extends DefaultListModel<File> {
         }
     }
 
+    @Override
     public boolean canGoUp() {
         return currentFolder.getParentFile() != null;
     }
 
+    @Override
     public void goUp() {
         if (!canGoUp()) {
             throw new IllegalStateException("current folder is top-level " +
@@ -39,6 +44,7 @@ public class FileListModel extends DefaultListModel<File> {
         openFolder(currentFolder.getParentFile());
     }
 
+    @Override
     public void setShowHiddenFiles(boolean showHiddenFiles) {
         if (this.showHiddenFiles != showHiddenFiles) {
             this.showHiddenFiles = showHiddenFiles;
@@ -48,6 +54,7 @@ public class FileListModel extends DefaultListModel<File> {
         }
     }
 
+    @Override
     public void toggleShowHiddenFiles() {
         setShowHiddenFiles(!showHiddenFiles);
     }

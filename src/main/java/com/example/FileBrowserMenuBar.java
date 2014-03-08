@@ -1,5 +1,8 @@
 package com.example;
 
+import com.example.filelist.FileList;
+import com.example.filelist.FileListModel;
+
 import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -11,7 +14,7 @@ public class FileBrowserMenuBar extends JMenuBar {
 
     public FileBrowserMenuBar(FileList fileList) {
         super.add(buildFileMenu());
-        super.add(buildViewMenu(fileList));
+        super.add(buildViewMenu(fileList.getModel()));
     }
 
     private JMenu buildFileMenu() {
@@ -20,14 +23,14 @@ public class FileBrowserMenuBar extends JMenuBar {
         return file;
     }
 
-    private JMenu buildViewMenu(final FileList fileList) {
+    private JMenu buildViewMenu(FileListModel model) {
         JMenu view = new JMenu("View");
         view.setMnemonic('v');
-        view.add(buildShowHiddenFilesItem(fileList));
+        view.add(buildShowHiddenFilesItem(model));
         return view;
     }
 
-    private JCheckBoxMenuItem buildShowHiddenFilesItem(final FileList fileList) {
+    private JCheckBoxMenuItem buildShowHiddenFilesItem(final FileListModel model) {
         JCheckBoxMenuItem showHiddenFilesItem = new JCheckBoxMenuItem(
                 "Show hidden files", Defaults.SHOW_HIDDEN_FILES
         );
@@ -35,7 +38,7 @@ public class FileBrowserMenuBar extends JMenuBar {
         showHiddenFilesItem.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                fileList.toggleShowHiddenFiles();
+                model.toggleShowHiddenFiles();
             }
         });
         return showHiddenFilesItem;

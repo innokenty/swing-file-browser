@@ -1,5 +1,7 @@
 package com.example;
 
+import com.example.filelist.LocalFileList;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -19,7 +21,7 @@ public class FileBrowser extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        FileList fileList = new FileList();
+        LocalFileList fileList = new LocalFileList();
         add(new JScrollPane(fileList), BorderLayout.CENTER);
         setJMenuBar(new FileBrowserMenuBar(fileList));
         add(new FileBrowserToolbar(fileList), BorderLayout.NORTH);
