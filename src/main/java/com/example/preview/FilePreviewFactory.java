@@ -1,6 +1,7 @@
 package com.example.preview;
 
-import java.io.File;
+import com.example.filelist.FileListEntry;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class FilePreviewFactory {
             new TextFilePreviewBuilder()
     );
 
-    public FilePreview getPreviewDialogFor(File file) throws IOException {
+    public FilePreview getPreviewDialogFor(FileListEntry file) throws IOException {
         FilePreviewBuilder builder = selectFirst(
                 BUILDERS,
                 having(on(FilePreviewBuilder.class)

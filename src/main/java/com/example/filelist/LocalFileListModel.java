@@ -4,23 +4,32 @@ import com.example.Defaults;
 
 import javax.swing.*;
 import java.io.File;
-import java.io.FileFilter;
+
+import static ch.lambdaj.Lambda.*;
+import static org.hamcrest.Matchers.equalTo;
 
 /**
  * @author innokenty
  */
-class LocalFileListModel extends DefaultListModel<File> implements FileListModel {
+class LocalFileListModel
+        extends DefaultListModel<LocalFileListEntry>
+        implements FileListModel<LocalFileListEntry> {
 
     private boolean showHiddenFiles = Defaults.SHOW_HIDDEN_FILES;
 
-    private File currentFolder;
+    private LocalFileListEntry currentFolder;
 
-    public LocalFileListModel(File currentFolder) {
-        openFolder(currentFolder);
+    public LocalFileListModel(File startingFolder) {
+        this(new LocalFileListEntry(startingFolder));
+    }
+
+    public LocalFileListModel(LocalFileListEntry currentFolder) {
+        this.currentFolder = currentFolder;
+        repaint();
     }
 
     @Override
-    public void openFolder(File folder) {
+    public void openFolder(LocalFileListEntry folder) {
         if (folder.isDirectory()) {
             this.currentFolder = folder;
             repaint();
@@ -59,25 +68,22 @@ class LocalFileListModel extends DefaultListModel<File> implements FileListModel
         }
     }
 
-    @Override
-    public void toggleShowHiddenFiles() {
-        setShowHiddenFiles(!showHiddenFiles);
-    }
-
     private void repaint() {
         super.clear();
-        for (File file : listFiles()) {
-            super.addElement(file);
+        for (LocalFileListEntry entry : listFiles()) {
+            super.addElement(entry);
         }
         super.fireContentsChanged(this, 0, size());
     }
 
-    private File[] listFiles() {
-        return this.currentFolder.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File file) {
-                return showHiddenFiles || !file.isHidden();
-            }
-        });
+    private Iterable<LocalFileListEntry> listFiles() {
+        if (showHiddenFiles) {
+            return currentFolder.listFiles();
+        } else {
+            return filter(having(
+                    on(LocalFileListEntry.class).isHidden(),
+                    equalTo(false)
+            ), currentFolder.listFiles());
+        }
     }
 }

@@ -5,7 +5,6 @@ import com.example.preview.FilePreview;
 import com.example.preview.FilePreviewFactory;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -18,7 +17,7 @@ import static javax.swing.KeyStroke.getKeyStroke;
 /**
  * @author innokenty
  */
-public class LocalFileList extends JList<File> implements FileList {
+public class LocalFileList extends JList<LocalFileListEntry> implements FileList {
 
     public LocalFileList() {
         this(getDefaultStartingFolder());
@@ -26,8 +25,7 @@ public class LocalFileList extends JList<File> implements FileList {
 
     public LocalFileList(File startingFolder) {
         super(new LocalFileListModel(startingFolder));
-        //noinspection unchecked
-        setCellRenderer(filenameCellRenderer());
+        setCellRenderer(new FileListEntryRenderer());
         initOpeningSelectedOnEnter();
         initOpeningSelectedOnDoubleClick();
     }
@@ -46,10 +44,10 @@ public class LocalFileList extends JList<File> implements FileList {
     /**
      * @param model only model of type com.example.filelist.FileListModel is supported
      * @throws java.lang.IllegalArgumentException if the passed model is not
-     *          instance of com.example.filelist.FileListModel
+     *                                            instance of com.example.filelist.FileListModel
      */
     @Override
-    public void setModel(ListModel<File> model) {
+    public void setModel(ListModel<LocalFileListEntry> model) {
         if (model instanceof LocalFileListModel) {
             super.setModel(model);
         } else {
@@ -68,7 +66,7 @@ public class LocalFileList extends JList<File> implements FileList {
 
     @Override
     public synchronized void openSelected() {
-        File selectedFile = super.getSelectedValue();
+        LocalFileListEntry selectedFile = super.getSelectedValue();
         if (selectedFile.isDirectory()) {
             getModel().openFolder(selectedFile);
         } else {
@@ -82,19 +80,6 @@ public class LocalFileList extends JList<File> implements FileList {
 
 
     /* GUI INITIALIZATION METHODS */
-
-    private static ListCellRenderer filenameCellRenderer() {
-        return new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(
-                    JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus
-            ) {
-                String fileName = ((File) value).getName();
-                return super.getListCellRendererComponent(
-                        list, fileName, index, isSelected, cellHasFocus);
-            }
-        };
-    }
 
     private void initOpeningSelectedOnEnter() {
         final String openFolderKey = "openFolder";
@@ -123,7 +108,7 @@ public class LocalFileList extends JList<File> implements FileList {
         });
     }
 
-    private void showFilePreview(File selectedFile) throws IOException {
+    private void showFilePreview(LocalFileListEntry selectedFile) throws IOException {
         FilePreview preview = new FilePreviewFactory().getPreviewDialogFor(selectedFile);
         if (preview != null) {
             preview.setLocationRelativeTo(this);

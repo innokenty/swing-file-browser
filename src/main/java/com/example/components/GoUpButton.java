@@ -41,8 +41,8 @@ public class GoUpButton extends JButton {
         container.onFileListChanged(new FileListWatcher() {
             @Override
             public void onFileListChanged(FileList newFileList) {
+                GoUpButton.super.setEnabled(newFileList.getModel().canGoUp());
                 FileListModel model = newFileList.getModel();
-                GoUpButton.super.setEnabled(model.canGoUp());
                 model.removeListDataListener(canGoUpListener);
                 model.addListDataListener(canGoUpListener);
             }

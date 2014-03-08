@@ -1,14 +1,13 @@
 package com.example.filelist;
 
 import javax.swing.event.ListDataListener;
-import java.io.File;
 
 /**
  * @author innokenty
  */
-public interface FileListModel {
+public interface FileListModel<T extends FileListEntry> {
 
-    void openFolder(File folder);
+    void openFolder(T folder);
 
     boolean canGoUp();
 
@@ -17,8 +16,6 @@ public interface FileListModel {
     boolean isShowingHiddenFiles();
 
     void setShowHiddenFiles(boolean showHiddenFiles);
-
-    void toggleShowHiddenFiles();
 
     void addListDataListener(ListDataListener l);
 

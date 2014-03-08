@@ -1,6 +1,7 @@
 package com.example.preview;
 
-import java.io.File;
+import com.example.filelist.FileListEntry;
+
 import java.io.IOException;
 
 /**
@@ -10,5 +11,5 @@ interface FilePreviewBuilder {
 
     boolean supportsExtension(String extension);
 
-    FilePreview getPreviewFor(File file) throws IOException;
+    FilePreview getPreviewFor(FileListEntry file) throws IOException;
 }
