@@ -3,6 +3,8 @@ package com.example.components;
 import com.example.FileListContainer;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * @author innokenty
@@ -20,7 +22,20 @@ public class FileBrowserMenuBar extends JMenuBar {
     private JMenu buildFileMenu() {
         JMenu file = new JMenu("File");
         file.setMnemonic('f');
+        file.add(buildQuitItem());
         return file;
+    }
+
+    private JMenuItem buildQuitItem() {
+        JMenuItem quit = new JMenuItem("Quit");
+        quit.setMnemonic('q');
+        quit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+        return quit;
     }
 
     private JMenu buildViewMenu() {
