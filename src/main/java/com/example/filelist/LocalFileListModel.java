@@ -5,9 +5,6 @@ import com.example.Defaults;
 import javax.swing.*;
 import java.io.File;
 
-import static ch.lambdaj.Lambda.*;
-import static org.hamcrest.Matchers.equalTo;
-
 /**
  * @author innokenty
  */
@@ -77,13 +74,6 @@ class LocalFileListModel
     }
 
     private Iterable<LocalFileListEntry> listFiles() {
-        if (showHiddenFiles) {
-            return currentFolder.listFiles();
-        } else {
-            return filter(having(
-                    on(LocalFileListEntry.class).isHidden(),
-                    equalTo(false)
-            ), currentFolder.listFiles());
-        }
+        return currentFolder.listFiles(showHiddenFiles);
     }
 }
