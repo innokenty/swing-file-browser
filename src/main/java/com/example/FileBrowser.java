@@ -12,6 +12,8 @@ import static com.example.Defaults.*;
  */
 public class FileBrowser extends JFrame {
 
+    private LocalFileList fileList;
+
     public FileBrowser() throws HeadlessException {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
 
@@ -21,10 +23,16 @@ public class FileBrowser extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        LocalFileList fileList = new LocalFileList();
+        fileList = new LocalFileList();
         add(new JScrollPane(fileList), BorderLayout.CENTER);
         setJMenuBar(new FileBrowserMenuBar(fileList));
         add(new FileBrowserToolbar(fileList), BorderLayout.NORTH);
+    }
+
+    @Override
+    public void setVisible(boolean b) {
+        super.setVisible(b);
+        fileList.requestFocusInWindow();
     }
 
     public static void main(String[] args) {
