@@ -16,4 +16,6 @@ public class Defaults {
     public static final int APP_MIN_HEIGHT = 300;
 
     public static final String APP_TITLE = "Example File Browser";
+
+    public static final boolean BUTTON_STATE_CHANGES_ON_LIST_CHANGE = true;
 }

@@ -1,5 +1,6 @@
 package com.example.filelist;
 
+import com.example.Icon;
 import com.example.preview.FilePreview;
 import com.example.preview.FilePreviewFactory;
 
@@ -142,7 +143,7 @@ public class LocalFileList extends JList<File> implements FileList {
                 "Opening this type of files is not supported.",
                 "Sorry, bro...",
                 JOptionPane.ERROR_MESSAGE,
-                com.example.Icon.SORRY_BRO.build()
+                Icon.SORRY_BRO.build()
         );
     }
 
@@ -152,7 +153,7 @@ public class LocalFileList extends JList<File> implements FileList {
                 "Oooops!",
                 e.getMessage(),
                 JOptionPane.ERROR_MESSAGE,
-                com.example.Icon.OOPS.build()
+                Icon.OOPS.build()
         );
     }
 }

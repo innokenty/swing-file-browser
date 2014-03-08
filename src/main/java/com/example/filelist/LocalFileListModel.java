@@ -45,6 +45,11 @@ class LocalFileListModel extends DefaultListModel<File> implements FileListModel
     }
 
     @Override
+    public boolean isShowingHiddenFiles() {
+        return showHiddenFiles;
+    }
+
+    @Override
     public void setShowHiddenFiles(boolean showHiddenFiles) {
         if (this.showHiddenFiles != showHiddenFiles) {
             this.showHiddenFiles = showHiddenFiles;

@@ -1,26 +1,35 @@
 package com.example;
 
+import com.example.components.FileBrowserMenuBar;
+import com.example.components.FileBrowserToolbar;
+import com.example.filelist.FileList;
 import com.example.filelist.LocalFileList;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.Defaults.*;
 
 /**
  * @author innokenty
  */
-public class FileBrowser extends JFrame {
-
-    private LocalFileList fileList;
+public class FileBrowser extends JFrame implements FileListContainer {
 
     static {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
     }
 
+    private LocalFileList fileList;
+
+    private final List<FileListWatcher> watchers = new ArrayList<>();
+
     public FileBrowser() throws HeadlessException {
         initWindowProperties();
+        initFileList();
         initComponents();
+        fireListChange();
     }
 
     private void initWindowProperties() {
@@ -31,17 +40,36 @@ public class FileBrowser extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    private void initComponents() {
+    private void initFileList() {
         fileList = new LocalFileList();
         add(new JScrollPane(fileList), BorderLayout.CENTER);
-        setJMenuBar(new FileBrowserMenuBar(fileList));
-        add(new FileBrowserToolbar(fileList), BorderLayout.NORTH);
+    }
+
+    private void initComponents() {
+        setJMenuBar(new FileBrowserMenuBar(this));
+        add(new FileBrowserToolbar(this), BorderLayout.NORTH);
     }
 
     @Override
     public void setVisible(boolean b) {
         super.setVisible(b);
         fileList.requestFocusInWindow();
+    }
+
+    @Override
+    public FileList getFileList() {
+        return fileList;
+    }
+
+    @Override
+    public void onFileListChanged(FileListWatcher watcher) {
+        watchers.add(watcher);
+    }
+
+    private void fireListChange() {
+        for (FileListWatcher watcher : watchers) {
+            watcher.onFileListChanged(fileList);
+        }
     }
 
     public static void main(String[] args) {

@@ -14,9 +14,13 @@ public interface FileListModel {
 
     void goUp();
 
+    boolean isShowingHiddenFiles();
+
     void setShowHiddenFiles(boolean showHiddenFiles);
 
     void toggleShowHiddenFiles();
 
     void addListDataListener(ListDataListener l);
+
+    void removeListDataListener(ListDataListener l);
 }
