@@ -1,6 +1,5 @@
 package com.example.filelist;
 
-import ch.lambdaj.function.convert.ConstructorArgumentConverter;
 import ch.lambdaj.function.convert.Converter;
 
 import java.io.File;
@@ -8,7 +7,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import static ch.lambdaj.Lambda.var;
 import static ch.lambdaj.collection.LambdaCollections.with;
 
 /**
@@ -17,7 +15,12 @@ import static ch.lambdaj.collection.LambdaCollections.with;
 class LocalFileListEntry implements FileListEntry {
 
     private static final Converter<File, LocalFileListEntry> CONVERTER
-            = new ConstructorArgumentConverter<>(LocalFileListEntry.class, var(File.class));
+            = new Converter<File, LocalFileListEntry>() {
+        @Override
+        public LocalFileListEntry convert(File from) {
+            return new LocalFileListEntry(from);
+        }
+    };
 
     private final File delegate;
 
@@ -58,6 +61,6 @@ class LocalFileListEntry implements FileListEntry {
 
     public LocalFileListEntry getParentFile() {
         File parent = delegate.getParentFile();
-        return parent == null ? null : CONVERTER.convert(parent);
+        return parent == null ? null : new LocalFileListEntry(parent);
     }
 }
