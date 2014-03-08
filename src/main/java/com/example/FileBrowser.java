@@ -1,7 +1,8 @@
 package com.example;
 
 import com.example.components.FileBrowserMenuBar;
-import com.example.components.FileBrowserToolbar;
+import com.example.components.GoUpButton;
+import com.example.components.ShowHiddenFilesButton;
 import com.example.filelist.FileList;
 import com.example.filelist.LocalFileList;
 
@@ -28,7 +29,8 @@ public class FileBrowser extends JFrame implements FileListContainer {
     public FileBrowser() throws HeadlessException {
         initWindowProperties();
         initFileList();
-        initComponents();
+        initMenuBar();
+        initToolbar();
         fireListChange();
     }
 
@@ -45,9 +47,15 @@ public class FileBrowser extends JFrame implements FileListContainer {
         add(new JScrollPane(fileList), BorderLayout.CENTER);
     }
 
-    private void initComponents() {
+    private void initMenuBar() {
         setJMenuBar(new FileBrowserMenuBar(this));
-        add(new FileBrowserToolbar(this), BorderLayout.NORTH);
+    }
+
+    private void initToolbar() {
+        JToolBar toolBar = new JToolBar();
+        toolBar.add(new GoUpButton(this));
+        toolBar.add(new ShowHiddenFilesButton(this));
+        add(toolBar, BorderLayout.NORTH);
     }
 
     @Override
