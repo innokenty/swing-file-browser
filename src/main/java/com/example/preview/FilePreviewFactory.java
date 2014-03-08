@@ -14,11 +14,14 @@ import static org.apache.commons.io.FilenameUtils.getExtension;
  */
 public class FilePreviewFactory {
 
+    private FilePreviewFactory() {
+    }
+
     private static final List<? extends FilePreviewBuilder> BUILDERS = asList(
             new TextFilePreviewBuilder()
     );
 
-    public FilePreview getPreviewDialogFor(FileListEntry file) throws IOException {
+    public static FilePreview getPreviewDialogFor(FileListEntry file) throws IOException {
         FilePreviewBuilder builder = selectFirst(
                 BUILDERS,
                 having(on(FilePreviewBuilder.class)
