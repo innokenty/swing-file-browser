@@ -13,7 +13,6 @@ public class LocalFileList extends FileList<LocalFileListEntry> {
 
     public LocalFileList(File startingFolder) throws Exception {
         super(new LocalFileListModel(startingFolder));
-
     }
 
     private static File getDefaultStartingFolder() {

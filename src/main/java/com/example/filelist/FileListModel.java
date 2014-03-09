@@ -31,7 +31,7 @@ public abstract class FileListModel<T extends FileListEntry>
         }
     }
 
-    private void repaint() throws Exception {
+    protected final void repaint() throws Exception {
         clear();
         for (T entry : listFiles()) {
             addElement(entry);
