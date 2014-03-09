@@ -1,6 +1,7 @@
 package com.example.components;
 
 import com.example.Defaults;
+import com.example.Dialogs;
 import com.example.FileListContainer;
 import com.example.FileListWatcher;
 import com.example.filelist.FileList;
@@ -24,6 +25,14 @@ class ShowHiddenFilesButtonDecorator {
         this.listContainer = listContainer;
     }
 
+    private void setShowHiddenFiles(boolean show, FileListModel model) {
+        try {
+            model.setShowHiddenFiles(show);
+        } catch (Exception e1) {
+            Dialogs.unexpectedError(e1, listContainer.getFileList());
+        }
+    }
+
     public <T extends AbstractButton> void decorate(T button) {
         addStateChangeListener(button);
         addListChangedListener(button);
@@ -34,7 +43,7 @@ class ShowHiddenFilesButtonDecorator {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 boolean show = e.getStateChange() == ItemEvent.SELECTED;
-                listContainer.getFileList().getModel().setShowHiddenFiles(show);
+                setShowHiddenFiles(show, listContainer.getFileList().getModel());
             }
         });
     }
@@ -49,7 +58,7 @@ class ShowHiddenFilesButtonDecorator {
                 if (Defaults.BUTTON_STATE_CHANGES_ON_LIST_CHANGE) {
                     button.setSelected(model.isShowingHiddenFiles());
                 } else {
-                    model.setShowHiddenFiles(button.isSelected());
+                    setShowHiddenFiles(button.isSelected(), model);
                 }
 
                 model.removeListDataListener(listener);

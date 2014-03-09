@@ -7,11 +7,11 @@ import java.io.File;
  */
 public class LocalFileList extends FileList<LocalFileListEntry> {
 
-    public LocalFileList() {
+    public LocalFileList() throws Exception {
         this(getDefaultStartingFolder());
     }
 
-    public LocalFileList(File startingFolder) {
+    public LocalFileList(File startingFolder) throws Exception {
         super(new LocalFileListModel(startingFolder));
 
     }

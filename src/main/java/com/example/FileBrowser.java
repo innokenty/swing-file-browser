@@ -26,7 +26,7 @@ public class FileBrowser extends JFrame implements FileListContainer {
 
     private final List<FileListWatcher> watchers = new ArrayList<>();
 
-    public FileBrowser() throws HeadlessException {
+    public FileBrowser() throws Exception {
         initWindowProperties();
         initFileList();
         initMenuBar();
@@ -42,7 +42,7 @@ public class FileBrowser extends JFrame implements FileListContainer {
         setLocationRelativeTo(null);
     }
 
-    private void initFileList() {
+    private void initFileList() throws Exception {
         fileList = new LocalFileList();
         add(new JScrollPane(fileList), BorderLayout.CENTER);
     }
@@ -80,7 +80,7 @@ public class FileBrowser extends JFrame implements FileListContainer {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         new FileBrowser().setVisible(true);
     }
 }

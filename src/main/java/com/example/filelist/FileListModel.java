@@ -1,25 +1,53 @@
 package com.example.filelist;
 
 import javax.swing.*;
-import javax.swing.event.ListDataListener;
 
 /**
  * @author innokenty
  */
-public interface FileListModel<T extends FileListEntry>
-    extends ListModel<T> {
+public abstract class FileListModel<T extends FileListEntry>
+        extends DefaultListModel<T> {
 
-    void openFolder(T folder) throws Exception;
+    public final void openFolder(T folder) throws Exception {
+        if (folder.isDirectory()) {
+            openFolderImpl(folder);
+            repaint();
+        } else {
+            throw new IllegalArgumentException("folder parameter of type " +
+                    "java.io.File must represent an actual folder!");
+        }
+    }
 
-    boolean canGoUp();
+    public final boolean goUp() throws Exception {
+        return canGoUp() && goUpImpl();
+    }
 
-    boolean goUp() throws Exception;
+    public final void setShowHiddenFiles(boolean showHiddenFiles) throws Exception {
+        if (this.isShowingHiddenFiles() != showHiddenFiles) {
+            setShowHiddenFilesImpl(showHiddenFiles);
+            repaint();
+        } else {
+            setShowHiddenFilesImpl(showHiddenFiles);
+        }
+    }
 
-    boolean isShowingHiddenFiles();
+    private void repaint() throws Exception {
+        clear();
+        for (T entry : listFiles()) {
+            addElement(entry);
+        }
+        fireContentsChanged(this, 0, size());
+    }
 
-    void setShowHiddenFiles(boolean showHiddenFiles);
+    public abstract boolean canGoUp();
 
-    void addListDataListener(ListDataListener l);
+    public abstract boolean isShowingHiddenFiles();
 
-    void removeListDataListener(ListDataListener l);
+    protected abstract void openFolderImpl(T folder) throws Exception;
+
+    protected abstract boolean goUpImpl() throws Exception;
+
+    protected abstract void setShowHiddenFilesImpl(boolean showHiddenFiles);
+
+    protected abstract Iterable<T> listFiles() throws Exception;
 }
