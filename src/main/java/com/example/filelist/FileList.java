@@ -1,6 +1,6 @@
 package com.example.filelist;
 
-import com.example.Icon;
+import com.example.Dialogs;
 import com.example.preview.FilePreview;
 import com.example.preview.FilePreviewFactory;
 
@@ -51,15 +51,18 @@ public abstract class FileList<T extends FileListEntry>
     public void openSelected() {
         T selectedFile = super.getSelectedValue();
         if (selectedFile.isDirectory()) {
-            getModel().openFolder(selectedFile);
+            try {
+                getModel().openFolder(selectedFile);
+            } catch (Exception e) {
+                Dialogs.unexpectedError(e, this);
+            }
         } else {
             try {
                 showFilePreview();
             } catch (IOException e) {
-                reportUnableToOpenFile(e);
+                Dialogs.unexpectedError(e, this);
             }
         }
-
     }
 
     /* GUI INITIALIZATION METHODS */
@@ -98,28 +101,7 @@ public abstract class FileList<T extends FileListEntry>
             preview.setLocationRelativeTo(this);
             preview.setVisible(true);
         } else {
-            showFilePreviewNotSupportedError();
+            Dialogs.sorryBro("Opening this type of files is not supported!", this);
         }
-    }
-
-    // TODO fix image sizes
-    private void showFilePreviewNotSupportedError() {
-        JOptionPane.showMessageDialog(
-                this,
-                "Opening this type of files is not supported.",
-                "Sorry, bro...",
-                JOptionPane.ERROR_MESSAGE,
-                com.example.Icon.SORRY_BRO.build()
-        );
-    }
-
-    protected void reportUnableToOpenFile(IOException e) {
-        JOptionPane.showMessageDialog(
-                this,
-                "Oooops!",
-                e.getMessage(),
-                JOptionPane.ERROR_MESSAGE,
-                Icon.OOPS.build()
-        );
     }
 }

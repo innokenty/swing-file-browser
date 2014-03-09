@@ -9,11 +9,11 @@ import javax.swing.event.ListDataListener;
 public interface FileListModel<T extends FileListEntry>
     extends ListModel<T> {
 
-    void openFolder(T folder);
+    void openFolder(T folder) throws Exception;
 
     boolean canGoUp();
 
-    void goUp();
+    boolean goUp() throws Exception;
 
     boolean isShowingHiddenFiles();
 

@@ -42,12 +42,12 @@ class LocalFileListModel
     }
 
     @Override
-    public void goUp() {
+    public boolean goUp() {
         if (!canGoUp()) {
-            throw new IllegalStateException("current folder is top-level " +
-                    "and does not have any parent folder!");
+            return false;
         }
         openFolder(currentFolder.getParentFile());
+        return true;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.components;
 
+import com.example.Dialogs;
 import com.example.FileListContainer;
 import com.example.FileListWatcher;
 import com.example.Icon;
@@ -29,7 +30,16 @@ public class GoUpButton extends JButton {
         super.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                container.getFileList().getModel().goUp();
+                try {
+                    if (!container.getFileList().getModel().goUp()) {
+                        Dialogs.sorryBro(
+                                "This is the top-level folder already!",
+                                container.getFileList()
+                        );
+                    }
+                } catch (Exception ex) {
+                    Dialogs.unexpectedError(ex, container.getFileList());
+                }
             }
         });
     }
