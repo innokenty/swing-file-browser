@@ -1,9 +1,10 @@
 package com.example.preview;
 
+import com.example.filelist.FileListEntry;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.io.InputStream;
 
 import static java.util.Arrays.asList;
 
@@ -16,15 +17,15 @@ class TextFilePreview extends FilePreview {
             "", "txt", "log", "xml", "html", "java", "properties"
     );
 
-    public TextFilePreview(String fileName, InputStream inputStream) throws IOException {
-        super(fileName);
+    public TextFilePreview(FileListEntry file) throws IOException {
+        super(file.getName());
 
         //TODO extract into properties
         setMinimumSize(new Dimension(300, 300));
         setSize(500, 500);
 
         JTextPane textPane = new JTextPane();
-        textPane.read(inputStream, null);
+        textPane.read(file.getInputStream(), null);
 
         //TODO support edited files saving
         textPane.setEditable(false);

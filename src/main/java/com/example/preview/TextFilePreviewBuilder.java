@@ -16,6 +16,6 @@ class TextFilePreviewBuilder implements FilePreviewBuilder {
 
     @Override
     public FilePreview getPreviewFor(FileListEntry file) throws IOException {
-        return new TextFilePreview(file.getName(), file.getInputStream());
+        return new TextFilePreview(file);
     }
 }
