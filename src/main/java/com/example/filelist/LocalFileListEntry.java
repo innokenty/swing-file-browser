@@ -35,13 +35,8 @@ class LocalFileListEntry implements FileListEntry {
     }
 
     @Override
-    public InputStream getInputStream() {
-        try {
-            return new FileInputStream(delegate);
-        } catch (FileNotFoundException e) {
-            //TODO handle
-            throw new RuntimeException(e);
-        }
+    public InputStream getInputStream() throws FileNotFoundException {
+        return new FileInputStream(delegate);
     }
 
     public LocalFileListEntry getParentFile() {

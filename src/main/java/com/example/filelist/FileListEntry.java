@@ -1,5 +1,6 @@
 package com.example.filelist;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -11,5 +12,5 @@ public interface FileListEntry {
 
     String getName();
 
-    InputStream getInputStream();
+    InputStream getInputStream() throws IOException;
 }
