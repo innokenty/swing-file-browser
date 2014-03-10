@@ -13,9 +13,11 @@ public class Defaults {
 
     public static final int APP_MIN_WIDTH = 200;
 
-    public static final int APP_MIN_HEIGHT = 300;
+    public static final int APP_MIN_HEIGHT = 350;
 
     public static final String APP_TITLE = "Example File Browser";
 
     public static final boolean BUTTON_STATE_CHANGES_ON_LIST_CHANGE = true;
+
+    public static final int TAB_BUTTON_SIZE = 17;
 }

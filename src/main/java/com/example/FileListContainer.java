@@ -10,4 +10,6 @@ public interface FileListContainer {
     FileList getFileList();
 
     void onFileListChanged(FileListWatcher watcher);
+
+    void fireListChange();
 }

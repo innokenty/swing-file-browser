@@ -9,7 +9,8 @@ public enum Icon {
     OOPS("img/oops.png"),
     SORRY_BRO("img/sorry-bro.jpg"),
     UP("img/up.png"),
-    GHOST("img/ghost.png");
+    GHOST("img/ghost.png"),
+    PLUS("img/plus.png");
 
     private final String resourceName;
 

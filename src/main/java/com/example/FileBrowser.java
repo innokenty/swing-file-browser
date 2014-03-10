@@ -3,35 +3,30 @@ package com.example;
 import com.example.components.FileBrowserMenuBar;
 import com.example.components.GoUpButton;
 import com.example.components.ShowHiddenFilesButton;
-import com.example.filelist.FileList;
-import com.example.filelist.LocalFileList;
+import com.example.tabs.FileListTabbedPane;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.example.Defaults.*;
 
 /**
  * @author innokenty
  */
-public class FileBrowser extends JFrame implements FileListContainer {
+public class FileBrowser extends JFrame {
 
     static {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
     }
 
-    private LocalFileList fileList;
-
-    private final List<FileListWatcher> watchers = new ArrayList<>();
+    private final FileListTabbedPane tabbedPane;
 
     public FileBrowser() throws Exception {
         initWindowProperties();
-        initFileList();
+        tabbedPane = new FileListTabbedPane();
+        add(tabbedPane);
         initMenuBar();
         initToolbar();
-        fireListChange();
     }
 
     private void initWindowProperties() {
@@ -42,42 +37,20 @@ public class FileBrowser extends JFrame implements FileListContainer {
         setLocationRelativeTo(null);
     }
 
-    private void initFileList() throws Exception {
-        fileList = new LocalFileList();
-        add(new JScrollPane(fileList), BorderLayout.CENTER);
-    }
-
     private void initMenuBar() {
-        setJMenuBar(new FileBrowserMenuBar(this));
+        setJMenuBar(new FileBrowserMenuBar(tabbedPane));
     }
 
     private void initToolbar() {
         JToolBar toolBar = new JToolBar();
-        toolBar.add(new GoUpButton(this));
-        toolBar.add(new ShowHiddenFilesButton(this));
+        toolBar.add(new GoUpButton(tabbedPane));
+        toolBar.add(new ShowHiddenFilesButton(tabbedPane));
         add(toolBar, BorderLayout.NORTH);
     }
 
     @Override
     public void setVisible(boolean b) {
         super.setVisible(b);
-        fileList.requestFocusInWindow();
-    }
-
-    @Override
-    public FileList getFileList() {
-        return fileList;
-    }
-
-    @Override
-    public void onFileListChanged(FileListWatcher watcher) {
-        watchers.add(watcher);
-    }
-
-    private void fireListChange() {
-        for (FileListWatcher watcher : watchers) {
-            watcher.onFileListChanged(fileList);
-        }
     }
 
     public static void main(String[] args) throws Exception {
