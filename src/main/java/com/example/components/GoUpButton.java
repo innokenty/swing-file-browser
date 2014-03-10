@@ -33,7 +33,8 @@ public class GoUpButton extends JButton {
                 try {
                     if (!container.getFileList().getModel().goUp()) {
                         Dialogs.sorryBro(
-                                "This is the top-level folder already!",
+                                "This is the top-level folder already! " +
+                                        "Or something's broken...",
                                 container.getFileList()
                         );
                     }
