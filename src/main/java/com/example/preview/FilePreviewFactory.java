@@ -18,7 +18,8 @@ public class FilePreviewFactory {
     }
 
     private static final List<? extends FilePreviewBuilder> BUILDERS = asList(
-            new TextFilePreviewBuilder()
+            new TextFilePreviewBuilder(),
+            new ImageFilePreviewBuilder()
     );
 
     public static FilePreview getPreviewDialogFor(FileListEntry file)
