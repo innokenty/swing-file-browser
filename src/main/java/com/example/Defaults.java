@@ -19,5 +19,11 @@ public class Defaults {
 
     public static final boolean BUTTON_STATE_CHANGES_ON_LIST_CHANGE = true;
 
+    public static final int FTP_CONTROL_IDLE = 1000;
+
+    public static final int FTP_DATA_TIMEOUT = 30000;
+
+    public static final int FTP_SO_TIMEOUT = 5 * 60 * 1000;
+
     public static final int TAB_BUTTON_SIZE = 17;
 }

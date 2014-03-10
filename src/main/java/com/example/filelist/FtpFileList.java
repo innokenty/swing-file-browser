@@ -1,5 +1,6 @@
 package com.example.filelist;
 
+import com.example.Defaults;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 
@@ -23,7 +24,10 @@ public class FtpFileList extends FileList<FtpFileListEntry> {
             throws Exception {
 
         FTPClient client = new FTPClient();
+        client.setDataTimeout(Defaults.FTP_DATA_TIMEOUT);
+        client.setControlKeepAliveTimeout(Defaults.FTP_CONTROL_IDLE);
         client.connect(hostname);
+        client.setSoTimeout(Defaults.FTP_SO_TIMEOUT);
         int reply = client.getReplyCode();
 
         if (!FTPReply.isPositiveCompletion(reply)) {
