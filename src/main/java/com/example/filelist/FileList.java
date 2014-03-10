@@ -99,6 +99,7 @@ public abstract class FileList<T extends FileListEntry>
                 .getPreviewDialogFor(super.getSelectedValue());
         if (preview != null) {
             preview.setLocationRelativeTo(this);
+            preview.pack();
             preview.setVisible(true);
         } else {
             Dialogs.sorryBro("Opening this type of files is not supported!", this);
