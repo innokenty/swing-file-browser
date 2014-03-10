@@ -50,4 +50,10 @@ class LocalFileListModel extends FileListModel<LocalFileListEntry> {
     protected Iterable<LocalFileListEntry> listFiles() {
         return currentFolder.listFiles(showHiddenFiles);
     }
+
+    @Override
+    public String getCurrentFolderName() {
+        String name = currentFolder.getName();
+        return name.isEmpty() ? "/" : name;
+    }
 }

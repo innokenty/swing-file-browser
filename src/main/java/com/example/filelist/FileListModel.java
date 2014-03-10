@@ -54,4 +54,6 @@ public abstract class FileListModel<T extends FileListEntry>
     protected abstract void setShowHiddenFilesImpl(boolean showHiddenFiles);
 
     protected abstract Iterable<T> listFiles() throws Exception;
+
+    public abstract String getCurrentFolderName();
 }

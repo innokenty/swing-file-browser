@@ -16,6 +16,8 @@ class FtpFileListModel extends FileListModel<FtpFileListEntry> {
 
     private final FTPClient client;
 
+    private String currentFolderName = "/";
+
     public FtpFileListModel(FTPClient client) throws Exception {
         this.client = client;
         client.setListHiddenFiles(Defaults.SHOW_HIDDEN_FILES);
@@ -25,7 +27,9 @@ class FtpFileListModel extends FileListModel<FtpFileListEntry> {
     @Override
     public void openFolderImpl(FtpFileListEntry folder) throws FtpClientException {
         try {
-            client.changeWorkingDirectory(folder.getName());
+            String folderName = folder.getName();
+            client.changeWorkingDirectory(folderName);
+            currentFolderName = folderName;
         } catch (IOException e) {
             throw new FtpClientException("Unable to open folder!", e);
         }
@@ -64,5 +68,10 @@ class FtpFileListModel extends FileListModel<FtpFileListEntry> {
                         return new FtpFileListEntry(client, file);
                     }
                 });
+    }
+
+    @Override
+    public String getCurrentFolderName() {
+        return currentFolderName;
     }
 }
