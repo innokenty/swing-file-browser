@@ -9,7 +9,7 @@ import java.io.IOException;
  */
 interface FilePreviewBuilder {
 
-    boolean supportsExtension(String extension);
+    boolean supportsMimetype(String mimetype);
 
     FilePreview getPreviewFor(FileListEntry file) throws IOException;
 }

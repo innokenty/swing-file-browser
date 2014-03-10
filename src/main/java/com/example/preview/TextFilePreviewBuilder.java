@@ -10,8 +10,8 @@ import java.io.IOException;
 class TextFilePreviewBuilder implements FilePreviewBuilder {
 
     @Override
-    public boolean supportsExtension(String extension) {
-        return TextFilePreview.SUPPORTED_EXTENSIONS.contains(extension);
+    public boolean supportsMimetype(String mimetype) {
+        return mimetype.startsWith("text/");
     }
 
     @Override

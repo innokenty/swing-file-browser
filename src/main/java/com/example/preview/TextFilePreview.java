@@ -6,23 +6,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
-import static java.util.Arrays.asList;
-
 /**
  * @author innokenty
  */
 class TextFilePreview extends FilePreview {
 
-    protected static final java.util.List<String> SUPPORTED_EXTENSIONS = asList(
-            "", "txt", "log", "xml", "html", "java", "properties"
-    );
+    private static final int MIN_SIZE = 300;
+
+    private static final int PREF_SIZE = 500;
 
     public TextFilePreview(FileListEntry file) throws IOException {
         super(file.getName());
 
         //TODO extract into properties
-        setMinimumSize(new Dimension(300, 300));
-        setSize(500, 500);
+        setMinimumSize(new Dimension(MIN_SIZE, MIN_SIZE));
+        setPreferredSize(new Dimension(PREF_SIZE, PREF_SIZE));
 
         JTextPane textPane = new JTextPane();
         textPane.read(file.getInputStream(), null);
