@@ -36,6 +36,10 @@ public abstract class FileListModel<T extends FileListEntry>
         for (T entry : listFiles()) {
             addElement(entry);
         }
+        fireContentsChanged();
+    }
+
+    public final void fireContentsChanged() {
         fireContentsChanged(this, 0, size());
     }
 
