@@ -14,8 +14,8 @@ public class Dialogs {
     public static void unexpectedError(Exception e, Component parent) {
         JOptionPane.showMessageDialog(
                 parent,
-                e.getMessage(),
                 ExceptionUtils.getStackTrace(e),
+                e.getMessage(),
                 JOptionPane.ERROR_MESSAGE,
                 Icon.OOPS.build()
         );
