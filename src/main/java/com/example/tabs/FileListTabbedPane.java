@@ -5,7 +5,6 @@ import com.example.FileListContainer;
 import com.example.FileListWatcher;
 import com.example.TabsGenerator;
 import com.example.filelist.FileList;
-import com.example.filelist.LocalFileList;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -29,13 +28,16 @@ public class FileListTabbedPane
     @Override
     public void addNewTab() {
         try {
-            addTab(new LocalFileList());
+            FileList list = new NewTabDialog(this).getFileList();
+            if (list != null) {
+                addNewTab(list);
+            }
         } catch (Exception e) {
             Dialogs.unexpectedError(e, this);
         }
     }
 
-    private void addTab(FileList fileList) {
+    private void addNewTab(FileList fileList) {
         int index = getTabCount() - 1;
         insertTab(null, null, new FileListScrollPane(fileList), null, index);
         setTabComponentAt(index, new FileListTabButtonComponent(fileList, this));
