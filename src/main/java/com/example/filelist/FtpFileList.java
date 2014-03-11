@@ -27,6 +27,7 @@ class FtpFileList extends FileList<FtpFileListEntry> {
         client.setDataTimeout(Defaults.FTP_DATA_TIMEOUT);
         client.setControlKeepAliveTimeout(Defaults.FTP_CONTROL_IDLE);
         client.connect(hostname);
+        client.enterLocalPassiveMode();
         client.setSoTimeout(Defaults.FTP_SO_TIMEOUT);
         int reply = client.getReplyCode();
 

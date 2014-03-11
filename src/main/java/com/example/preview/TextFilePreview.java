@@ -4,7 +4,7 @@ import com.example.filelist.FileListEntry;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author innokenty
@@ -15,7 +15,7 @@ class TextFilePreview extends FilePreview {
 
     private static final int PREF_SIZE = 500;
 
-    public TextFilePreview(FileListEntry file) throws IOException {
+    public TextFilePreview(FileListEntry file) throws Exception {
         super(file.getName());
 
         //TODO extract into properties
@@ -23,7 +23,9 @@ class TextFilePreview extends FilePreview {
         setPreferredSize(new Dimension(PREF_SIZE, PREF_SIZE));
 
         JTextPane textPane = new JTextPane();
-        textPane.read(file.getInputStream(), null);
+        InputStream stream = file.getInputStream();
+        textPane.read(stream, null);
+        stream.close();
 
         //TODO support edited files saving
         textPane.setEditable(false);

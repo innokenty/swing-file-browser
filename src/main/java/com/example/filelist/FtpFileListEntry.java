@@ -3,7 +3,6 @@ package com.example.filelist;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -31,7 +30,11 @@ class FtpFileListEntry implements FileListEntry {
     }
 
     @Override
-    public InputStream getInputStream() throws IOException {
-        return client.retrieveFileStream(delegate.getName());
+    public InputStream getInputStream() throws Exception {
+        InputStream stream = client.retrieveFileStream(delegate.getName());
+        if (!client.completePendingCommand()) {
+            throw new FtpClientException("File transfer failed!");
+        }
+        return stream;
     }
 }

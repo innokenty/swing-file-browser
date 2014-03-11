@@ -6,7 +6,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author innokenty
@@ -21,10 +21,13 @@ public class ImageFilePreview extends FilePreview {
 
     private static final int VERTICAL_DELTA = 70;
 
-    public ImageFilePreview(FileListEntry file) throws IOException {
+    public ImageFilePreview(FileListEntry file) throws Exception {
         super(file.getName());
 
-        BufferedImage image = ImageIO.read(file.getInputStream());
+        InputStream stream = file.getInputStream();
+        BufferedImage image = ImageIO.read(stream);
+        stream.close();
+
         setPreferredSize(new Dimension(PREF_SIZE, PREF_SIZE));
         setMinimumSize(new Dimension(
                 Math.min(image.getWidth() + HORIZONTAL_DELTA, MIN_SIZE),

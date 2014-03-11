@@ -2,8 +2,6 @@ package com.example.preview;
 
 import com.example.filelist.FileListEntry;
 
-import java.io.IOException;
-
 /**
  * @author innokenty
  */
@@ -15,7 +13,7 @@ class TextFilePreviewBuilder implements FilePreviewBuilder {
     }
 
     @Override
-    public FilePreview getPreviewFor(FileListEntry file) throws IOException {
+    public FilePreview getPreviewFor(FileListEntry file) throws Exception {
         return new TextFilePreview(file);
     }
 }

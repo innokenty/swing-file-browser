@@ -3,7 +3,6 @@ package com.example.preview;
 import com.example.filelist.FileListEntry;
 
 import javax.activation.MimetypesFileTypeMap;
-import java.io.IOException;
 import java.util.List;
 
 import static ch.lambdaj.Lambda.*;
@@ -23,7 +22,7 @@ public class FilePreviewFactory {
     );
 
     public static FilePreview getPreviewDialogFor(FileListEntry file)
-            throws IOException {
+            throws Exception {
         String mimetype = new MimetypesFileTypeMap().getContentType(file.getName());
         FilePreviewBuilder builder = selectFirst(
                 BUILDERS,

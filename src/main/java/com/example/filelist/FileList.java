@@ -8,7 +8,6 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 
 import static java.awt.event.KeyEvent.VK_ENTER;
 import static javax.swing.KeyStroke.getKeyStroke;
@@ -59,7 +58,7 @@ public abstract class FileList<T extends FileListEntry>
         } else {
             try {
                 showFilePreview();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 Dialogs.unexpectedError(e, this);
             }
         }
@@ -94,7 +93,7 @@ public abstract class FileList<T extends FileListEntry>
         });
     }
 
-    protected void showFilePreview() throws IOException {
+    protected void showFilePreview() throws Exception {
         FilePreview preview = FilePreviewFactory
                 .getPreviewDialogFor(super.getSelectedValue());
         if (preview != null) {
