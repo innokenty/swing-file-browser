@@ -49,18 +49,14 @@ public abstract class FileList<T extends FileListEntry>
 
     public void openSelected() {
         T selectedFile = super.getSelectedValue();
-        if (selectedFile.isDirectory()) {
-            try {
+        try {
+            if (selectedFile.isDirectory()) {
                 getModel().openFolder(selectedFile);
-            } catch (Exception e) {
-                Dialogs.unexpectedError(e, this);
-            }
-        } else {
-            try {
+            } else {
                 showFilePreview();
-            } catch (Exception e) {
-                Dialogs.unexpectedError(e, this);
             }
+        } catch (Exception e) {
+            Dialogs.unexpectedError(e, this);
         }
     }
 
