@@ -5,6 +5,7 @@ import com.example.FileListContainer;
 import com.example.FileListWatcher;
 import com.example.TabsGenerator;
 import com.example.filelist.FileList;
+import com.example.filelist.NewFileListDialog;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class FileListTabbedPane
     @Override
     public void addNewTab() {
         try {
-            FileList list = new NewTabDialog(this).getFileList();
+            FileList list = new NewFileListDialog(this).getFileList();
             if (list != null) {
                 addNewTab(list);
             }

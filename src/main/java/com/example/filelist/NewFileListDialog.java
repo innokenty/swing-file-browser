@@ -1,6 +1,4 @@
-package com.example.tabs;
-
-import com.example.filelist.FileList;
+package com.example.filelist;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,11 +7,11 @@ import java.awt.event.ActionEvent;
 /**
  * @author innokenty
  */
-class NewTabDialog extends JDialog {
+public class NewFileListDialog extends JDialog {
 
     private FileListFactory factory;
 
-    public NewTabDialog(Component owner) {
+    public NewFileListDialog(Component owner) {
         super(JOptionPane.getFrameForComponent(owner));
         setPreferredSize(new Dimension(300, 200));
         setMinimumSize(getPreferredSize());
@@ -33,13 +31,13 @@ class NewTabDialog extends JDialog {
         bottomPanel.add(new JButton(new AbstractAction("Cancel") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                NewTabDialog.this.dispose();
+                NewFileListDialog.this.dispose();
             }
         }));
         bottomPanel.add(new JButton(new AbstractAction("OK") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                NewTabDialog.this.dispose();
+                NewFileListDialog.this.dispose();
                 factory = ((FileListFactory) tabbedPane.getSelectedComponent());
             }
         }));

@@ -1,6 +1,4 @@
-package com.example.tabs;
-
-import com.example.filelist.FileList;
+package com.example.filelist;
 
 /**
  * @author innokenty

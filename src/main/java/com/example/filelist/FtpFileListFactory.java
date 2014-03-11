@@ -1,6 +1,5 @@
-package com.example.tabs;
+package com.example.filelist;
 
-import com.example.filelist.FtpFileList;
 import com.example.utils.SpringUtilities;
 
 import javax.swing.*;

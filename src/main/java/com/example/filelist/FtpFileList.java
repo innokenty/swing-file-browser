@@ -7,7 +7,7 @@ import org.apache.commons.net.ftp.FTPReply;
 /**
  * @author innokenty
  */
-public class FtpFileList extends FileList<FtpFileListEntry> {
+class FtpFileList extends FileList<FtpFileListEntry> {
 
     public FtpFileList(
             String hostname, String username, String password)

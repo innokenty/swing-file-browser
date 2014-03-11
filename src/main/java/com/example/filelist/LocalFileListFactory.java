@@ -1,6 +1,4 @@
-package com.example.tabs;
-
-import com.example.filelist.LocalFileList;
+package com.example.filelist;
 
 import javax.swing.*;
 import java.awt.*;
