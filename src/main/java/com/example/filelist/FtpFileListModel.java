@@ -25,7 +25,12 @@ class FtpFileListModel extends FileListModel<FtpFileListEntry> {
     }
 
     @Override
-    public void openFolderImpl(FtpFileListEntry folder) throws FtpClientException {
+    public String getCurrentFolderName() {
+        return currentFolderName;
+    }
+
+    @Override
+    protected void openFolderImpl(FtpFileListEntry folder) throws FtpClientException {
         try {
             String folderName = folder.getName();
             client.changeWorkingDirectory(folderName);
@@ -33,30 +38,6 @@ class FtpFileListModel extends FileListModel<FtpFileListEntry> {
         } catch (IOException e) {
             throw new FtpClientException("Unable to open folder!", e);
         }
-    }
-
-    @Override
-    public boolean canGoUp() {
-        return true;
-    }
-
-    @Override
-    public boolean goUpImpl() throws Exception {
-        boolean result = client.changeToParentDirectory();
-        if (result) {
-            repaint();
-        }
-        return result;
-    }
-
-    @Override
-    public boolean isShowingHiddenFiles() {
-        return client.getListHiddenFiles();
-    }
-
-    @Override
-    public void setShowHiddenFilesImpl(boolean showHiddenFiles) {
-        client.setListHiddenFiles(showHiddenFiles);
     }
 
     @Override
@@ -71,7 +52,26 @@ class FtpFileListModel extends FileListModel<FtpFileListEntry> {
     }
 
     @Override
-    public String getCurrentFolderName() {
-        return currentFolderName;
+    public boolean canGoUp() {
+        return true;
+    }
+
+    @Override
+    protected boolean goUpImpl() throws Exception {
+        boolean result = client.changeToParentDirectory();
+        if (result) {
+            repaint();
+        }
+        return result;
+    }
+
+    @Override
+    public boolean isShowingHiddenFiles() {
+        return client.getListHiddenFiles();
+    }
+
+    @Override
+    protected void setShowHiddenFilesImpl(boolean showHiddenFiles) {
+        client.setListHiddenFiles(showHiddenFiles);
     }
 }

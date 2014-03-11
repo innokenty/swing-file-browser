@@ -22,18 +22,23 @@ class LocalFileListModel extends FileListModel<LocalFileListEntry> {
     }
 
     @Override
-    public boolean canGoUp() {
-        return currentFolder.getParentFile() != null;
-    }
-
-    @Override
-    public boolean isShowingHiddenFiles() {
-        return showHiddenFiles;
+    public String getCurrentFolderName() {
+        String name = currentFolder.getName();
+        return name.isEmpty() ? "/" : name;
     }
 
     @Override
     protected void openFolderImpl(LocalFileListEntry folder) {
         this.currentFolder = folder;
+    }
+
+    protected Iterable<LocalFileListEntry> listFiles() {
+        return currentFolder.listFiles(showHiddenFiles);
+    }
+
+    @Override
+    public boolean canGoUp() {
+        return currentFolder.getParentFile() != null;
     }
 
     @Override
@@ -43,17 +48,12 @@ class LocalFileListModel extends FileListModel<LocalFileListEntry> {
     }
 
     @Override
-    protected void setShowHiddenFilesImpl(boolean showHiddenFiles) {
-        this.showHiddenFiles = showHiddenFiles;
-    }
-
-    protected Iterable<LocalFileListEntry> listFiles() {
-        return currentFolder.listFiles(showHiddenFiles);
+    public boolean isShowingHiddenFiles() {
+        return showHiddenFiles;
     }
 
     @Override
-    public String getCurrentFolderName() {
-        String name = currentFolder.getName();
-        return name.isEmpty() ? "/" : name;
+    protected void setShowHiddenFilesImpl(boolean showHiddenFiles) {
+        this.showHiddenFiles = showHiddenFiles;
     }
 }
