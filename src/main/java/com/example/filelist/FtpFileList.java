@@ -10,10 +10,12 @@ import org.apache.commons.net.ftp.FTPSClient;
  */
 class FtpFileList extends FileList {
 
+    public static final int DEFAULT_PORT = 21;
+
     public FtpFileList(
-            String hostname, int port, String username, String password, boolean useFTPS)
+            String hostname, int port, boolean useFTPS, String username, String password)
             throws Exception {
-        this(buildSimpleClient(hostname, port, username, password, useFTPS));
+        this(buildSimpleClient(hostname, port, useFTPS, username, password));
     }
 
     public FtpFileList(FTPClient client) throws Exception {
@@ -21,7 +23,7 @@ class FtpFileList extends FileList {
     }
 
     private static FTPClient buildSimpleClient(
-            String hostname, int port, String username, String password, boolean useFTPS)
+            String hostname, int port, boolean useFTPS, String username, String password)
             throws Exception {
 
         FTPClient client = useFTPS ? new FTPSClient() : new FTPClient();

@@ -34,8 +34,11 @@ class FtpFileListFactory
 
         JLabel portLabel = new JLabel("port", JLabel.TRAILING);
         add(portLabel);
-        port = new JFormattedTextField(new DecimalFormat("##00"));
-        port.setText("21");
+        DecimalFormat format = new DecimalFormat("##00");
+        format.setMinimumIntegerDigits(1);
+        format.setMaximumIntegerDigits(4);
+        port = new JFormattedTextField(format);
+        port.setText(String.valueOf(FtpFileList.DEFAULT_PORT));
         portLabel.setLabelFor(port);
         add(port);
 
@@ -65,11 +68,18 @@ class FtpFileListFactory
 
     @Override
     public FtpFileList buildFileList() throws Exception {
+        int port;
+        try {
+            port = Integer.parseInt(this.port.getText());
+        } catch (NumberFormatException e) {
+            port = FtpFileList.DEFAULT_PORT;
+        }
         return new FtpFileList(
                 hostname.getText(),
-                Integer.parseInt(port.getText()), username.getText(),
+                port,
+                ftps.isSelected(),
+                username.getText(),
                 new String(password.getPassword()),
-                ftps.isSelected()
         );
     }
 }
