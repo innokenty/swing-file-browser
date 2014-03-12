@@ -8,14 +8,15 @@ import javax.swing.*;
 public abstract class FileListModel<T extends FileListEntry>
         extends DefaultListModel<T> {
 
-    public final void openFolder(T folder) throws Exception {
-        if (folder.isDirectory()) {
-            openFolderImpl(folder);
-            repaint();
-        } else {
-            throw new IllegalArgumentException("folder parameter of type " +
-                    "java.io.File must represent an actual folder!");
+    public final boolean openFolder(T folder) throws Exception {
+        if (!folder.isDirectory()) {
+            return false;
         }
+        if (openFolderImpl(folder)) {
+            repaint();
+            return true;
+        }
+        return false;
     }
 
     public final boolean goUp() throws Exception {
@@ -50,7 +51,7 @@ public abstract class FileListModel<T extends FileListEntry>
     public abstract String getCurrentFolderName();
 
 
-    protected abstract void openFolderImpl(T folder) throws Exception;
+    protected abstract boolean openFolderImpl(T folder) throws Exception;
 
     protected abstract boolean goUpImpl() throws Exception;
 

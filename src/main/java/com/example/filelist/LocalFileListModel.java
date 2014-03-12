@@ -18,7 +18,13 @@ class LocalFileListModel extends FileListModel<LocalFileListEntry> {
     }
 
     public LocalFileListModel(LocalFileListEntry currentFolder) throws Exception {
-        openFolder(currentFolder);
+        if (!openFolder(currentFolder)) {
+            throw new FileListException("Passed parameter must be an actual folder!");
+        }
+    }
+
+    protected final LocalFileListEntry getCurrentFolder() {
+        return currentFolder;
     }
 
     @Override
@@ -28,8 +34,12 @@ class LocalFileListModel extends FileListModel<LocalFileListEntry> {
     }
 
     @Override
-    protected void openFolderImpl(LocalFileListEntry folder) {
-        this.currentFolder = folder;
+    protected boolean openFolderImpl(LocalFileListEntry folder) {
+        if (folder.isDirectory()) {
+            this.currentFolder = folder;
+            return true;
+        }
+        return false;
     }
 
     protected Iterable<LocalFileListEntry> listFiles() {

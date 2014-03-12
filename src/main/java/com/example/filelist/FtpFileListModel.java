@@ -30,11 +30,14 @@ class FtpFileListModel extends FileListModel<FtpFileListEntry> {
     }
 
     @Override
-    protected void openFolderImpl(FtpFileListEntry folder) throws FtpClientException {
+    protected boolean openFolderImpl(FtpFileListEntry folder) throws FtpClientException {
         try {
             String folderName = folder.getName();
-            client.changeWorkingDirectory(folderName);
-            currentFolderName = folderName;
+            boolean result = client.changeWorkingDirectory(folderName);
+            if (result) {
+                currentFolderName = folderName;
+            }
+            return result;
         } catch (IOException e) {
             throw new FtpClientException("Unable to open folder!", e);
         }

@@ -8,7 +8,7 @@ import org.apache.commons.net.ftp.FTPSClient;
 /**
  * @author innokenty
  */
-class FtpFileList extends FileList<FtpFileListEntry> {
+class FtpFileList extends FileList {
 
     public FtpFileList(
             String hostname, int port, String username, String password, boolean useFTPS)

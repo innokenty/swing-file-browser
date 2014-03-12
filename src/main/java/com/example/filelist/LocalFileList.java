@@ -5,7 +5,7 @@ import java.io.File;
 /**
  * @author innokenty
  */
-class LocalFileList extends FileList<LocalFileListEntry> {
+class LocalFileList extends FileList {
 
     public LocalFileList() throws Exception {
         this(getDefaultStartingFolder());

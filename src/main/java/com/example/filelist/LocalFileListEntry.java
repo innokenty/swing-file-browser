@@ -51,11 +51,15 @@ class LocalFileListEntry implements FileListEntry {
                     having(on(File.class).isHidden(), equalTo(true))
             );
         }
-        return files.convert(new Converter<File, LocalFileListEntry>() {
+        return files.convert(getConverter());
+    }
+
+    protected Converter<File, LocalFileListEntry> getConverter() {
+        return new Converter<File, LocalFileListEntry>() {
             @Override
             public LocalFileListEntry convert(File file) {
                 return new LocalFileListEntry(file);
             }
-        });
+        };
     }
 }

@@ -8,17 +8,25 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.util.Stack;
 
+import static com.example.utils.StreamUnzipper.getRandomTempFolder;
+import static com.example.utils.StreamUnzipper.unzip;
 import static java.awt.event.KeyEvent.VK_ENTER;
 import static javax.swing.KeyStroke.getKeyStroke;
 
 /**
  * @author innokenty
  */
-public abstract class FileList<T extends FileListEntry>
-        extends JList<T> {
+public abstract class FileList
+        extends JList<FileListEntry>
+        implements FileListModelSwitcher {
 
-    public FileList(FileListModel<T> dataModel) {
+    private Stack<FileListModel<FileListEntry>> rememberedModels = new Stack<>();
+
+    public FileList(FileListModel dataModel) {
+        //noinspection unchecked
         super(dataModel);
         setCellRenderer(new FileListEntryRenderer());
         initOpeningSelectedOnEnter();
@@ -34,7 +42,7 @@ public abstract class FileList<T extends FileListEntry>
      * instance of com.example.filelist.FileListModel
      */
     @Override
-    public void setModel(ListModel<T> model) {
+    public void setModel(ListModel<FileListEntry> model) {
         if (model instanceof FileListModel) {
             super.setModel(model);
         } else {
@@ -43,16 +51,17 @@ public abstract class FileList<T extends FileListEntry>
         }
     }
 
-    public FileListModel<T> getModel() {
-        return (FileListModel<T>) super.getModel();
+    @SuppressWarnings("unchecked")
+    public FileListModel<FileListEntry> getModel() {
+        return (FileListModel<FileListEntry>) super.getModel();
     }
 
     public void openSelected() {
-        T selectedFile = super.getSelectedValue();
+        FileListEntry selectedFile = super.getSelectedValue();
         try {
-            if (selectedFile.isDirectory()) {
-                getModel().openFolder(selectedFile);
-            } else {
+            //noinspection unchecked
+            if (!getModel().openFolder(selectedFile)
+                    && !openArchive(selectedFile)) {
                 showFilePreview();
             }
         } catch (Exception e) {
@@ -60,10 +69,28 @@ public abstract class FileList<T extends FileListEntry>
         }
     }
 
+    private boolean openArchive(FileListEntry selectedFile) throws Exception {
+        File tmp = getRandomTempFolder();
+        tmp.deleteOnExit();
+        boolean unzippedSuccessfully = unzip(selectedFile.getInputStream(), tmp);
+        if (unzippedSuccessfully) {
+            rememberedModels.push(getModel());
+            ListModel model = new TempFolderFileListModel(tmp, selectedFile.getName(), this);
+            //noinspection unchecked
+            setModel(model);
+        }
+        return unzippedSuccessfully;
+    }
+
+    @Override
+    public void switchBack() {
+        setModel(rememberedModels.pop());
+    }
+
     /* GUI INITIALIZATION METHODS */
 
     protected void initOpeningSelectedOnEnter() {
-        final String openFolderKey = "openFolder";
+        final String openFolderKey = "openSelectedFile";
         KeyStroke enterKeyStroke = getKeyStroke(VK_ENTER, 0);
         super.getInputMap().put(enterKeyStroke, openFolderKey);
         super.getActionMap().put(openFolderKey, openSelectedAction());
