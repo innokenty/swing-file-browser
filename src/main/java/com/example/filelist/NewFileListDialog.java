@@ -13,9 +13,9 @@ public class NewFileListDialog extends JDialog {
 
     public NewFileListDialog(Component owner) {
         super(JOptionPane.getFrameForComponent(owner));
-        setPreferredSize(new Dimension(300, 200));
+        setPreferredSize(new Dimension(300, 300));
         setMinimumSize(getPreferredSize());
-        setMaximumSize(new Dimension(400, 250));
+        setMaximumSize(new Dimension(400, 300));
         setTitle("Please select new tab type");
         setModal(true);
 

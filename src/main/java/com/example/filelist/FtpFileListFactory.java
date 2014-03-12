@@ -3,6 +3,7 @@ package com.example.filelist;
 import com.example.utils.SpringUtilities;
 
 import javax.swing.*;
+import java.text.DecimalFormat;
 
 /**
  * @author innokenty
@@ -12,6 +13,10 @@ class FtpFileListFactory
         implements FileListFactory<FtpFileList> {
 
     private final JTextField hostname;
+
+    private final JTextField port;
+
+    private final JCheckBox ftps;
 
     private final JTextField username;
 
@@ -27,6 +32,19 @@ class FtpFileListFactory
         hostnameLabel.setLabelFor(hostname);
         add(hostname);
 
+        JLabel portLabel = new JLabel("port", JLabel.TRAILING);
+        add(portLabel);
+        port = new JFormattedTextField(new DecimalFormat("##00"));
+        port.setText("21");
+        portLabel.setLabelFor(port);
+        add(port);
+
+        JLabel ftpsLabel = new JLabel("ftps", JLabel.TRAILING);
+        add(ftpsLabel);
+        ftps = new JCheckBox();
+        ftpsLabel.setLabelFor(ftps);
+        add(ftps);
+
         JLabel usernameLabel = new JLabel("username", JLabel.TRAILING);
         add(usernameLabel);
         username = new JTextField();
@@ -40,7 +58,7 @@ class FtpFileListFactory
         add(password);
 
         SpringUtilities.makeCompactGrid(this,
-                3, 2,
+                5, 2,
                 6, 6,
                 6, 6);
     }
@@ -49,8 +67,9 @@ class FtpFileListFactory
     public FtpFileList buildFileList() throws Exception {
         return new FtpFileList(
                 hostname.getText(),
-                username.getText(),
-                new String(password.getPassword())
+                Integer.parseInt(port.getText()), username.getText(),
+                new String(password.getPassword()),
+                ftps.isSelected()
         );
     }
 }

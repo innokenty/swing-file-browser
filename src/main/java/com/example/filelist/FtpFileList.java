@@ -3,6 +3,7 @@ package com.example.filelist;
 import com.example.Defaults;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
+import org.apache.commons.net.ftp.FTPSClient;
 
 /**
  * @author innokenty
@@ -10,9 +11,9 @@ import org.apache.commons.net.ftp.FTPReply;
 class FtpFileList extends FileList<FtpFileListEntry> {
 
     public FtpFileList(
-            String hostname, String username, String password)
+            String hostname, int port, String username, String password, boolean useFTPS)
             throws Exception {
-        this(buildSimpleClient(hostname, username, password));
+        this(buildSimpleClient(hostname, port, username, password, useFTPS));
     }
 
     public FtpFileList(FTPClient client) throws Exception {
@@ -20,13 +21,13 @@ class FtpFileList extends FileList<FtpFileListEntry> {
     }
 
     private static FTPClient buildSimpleClient(
-            String hostname, String username, String password)
+            String hostname, int port, String username, String password, boolean useFTPS)
             throws Exception {
 
-        FTPClient client = new FTPClient();
+        FTPClient client = useFTPS ? new FTPSClient() : new FTPClient();
         client.setDataTimeout(Defaults.FTP_DATA_TIMEOUT);
         client.setControlKeepAliveTimeout(Defaults.FTP_CONTROL_IDLE);
-        client.connect(hostname);
+        client.connect(hostname, port);
         client.enterLocalPassiveMode();
         client.setSoTimeout(Defaults.FTP_SO_TIMEOUT);
         int reply = client.getReplyCode();
