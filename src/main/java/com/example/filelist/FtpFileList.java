@@ -13,9 +13,9 @@ class FtpFileList extends FileList {
     public static final int DEFAULT_PORT = 21;
 
     public FtpFileList(
-            String hostname, int port, boolean useFTPS, String username, String password)
+            String hostname, int port, boolean useFTPS, String username, String password, int fileType)
             throws Exception {
-        this(buildSimpleClient(hostname, port, useFTPS, username, password));
+        this(buildSimpleClient(hostname, port, useFTPS, username, password, fileType));
     }
 
     public FtpFileList(FTPClient client) throws Exception {
@@ -23,7 +23,7 @@ class FtpFileList extends FileList {
     }
 
     private static FTPClient buildSimpleClient(
-            String hostname, int port, boolean useFTPS, String username, String password)
+            String hostname, int port, boolean useFTPS, String username, String password, int fileType)
             throws Exception {
 
         FTPClient client = useFTPS ? new FTPSClient() : new FTPClient();
@@ -42,6 +42,7 @@ class FtpFileList extends FileList {
         if (!client.login(username, password)) {
             throw new FtpClientException("Unable to login to the ftp server");
         }
+        client.setFileType(fileType);
 
         client.setKeepAlive(true);
         return client;

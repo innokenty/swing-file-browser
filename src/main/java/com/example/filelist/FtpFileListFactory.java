@@ -1,9 +1,11 @@
 package com.example.filelist;
 
 import com.example.utils.SpringUtilities;
+import org.apache.commons.net.ftp.FTP;
 
 import javax.swing.*;
 import java.text.DecimalFormat;
+import java.util.LinkedHashMap;
 
 /**
  * @author innokenty
@@ -11,6 +13,23 @@ import java.text.DecimalFormat;
 class FtpFileListFactory
         extends JPanel
         implements FileListFactory<FtpFileList> {
+
+    private static class FileTypeOptions extends LinkedHashMap<String, Integer> {
+
+        {
+            put("ASCII FILE TYPE", FTP.ASCII_FILE_TYPE);
+            put("BINARY FILE TYPE", FTP.BINARY_FILE_TYPE);
+            put("EBCDIC FILE TYPE", FTP.EBCDIC_FILE_TYPE);
+            put("LOCAL FILE TYPE", FTP.LOCAL_FILE_TYPE);
+        }
+
+        String[] getKeysAsArray() {
+            return this.keySet().toArray(new String[this.size()]);
+        }
+    }
+
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+    private static final FileTypeOptions FILE_TYPE_OPTIONS = new FileTypeOptions();
 
     private final JTextField hostname;
 
@@ -21,6 +40,8 @@ class FtpFileListFactory
     private final JTextField username;
 
     private final JPasswordField password;
+
+    private final JComboBox<String> fileType;
 
     public FtpFileListFactory() {
         setName("FTP");
@@ -60,8 +81,14 @@ class FtpFileListFactory
         passwordLabel.setLabelFor(password);
         add(password);
 
+        JLabel fileTypeLabel = new JLabel("fileType", JLabel.TRAILING);
+        add(fileTypeLabel);
+        fileType = new JComboBox<>(FILE_TYPE_OPTIONS.getKeysAsArray());
+        fileTypeLabel.setLabelFor(fileType);
+        add(fileType);
+
         SpringUtilities.makeCompactGrid(this,
-                5, 2,
+                6, 2,
                 6, 6,
                 6, 6);
     }
@@ -74,12 +101,14 @@ class FtpFileListFactory
         } catch (NumberFormatException e) {
             port = FtpFileList.DEFAULT_PORT;
         }
+        //noinspection SuspiciousMethodCalls
         return new FtpFileList(
                 hostname.getText(),
                 port,
                 ftps.isSelected(),
                 username.getText(),
                 new String(password.getPassword()),
+                FILE_TYPE_OPTIONS.get(fileType.getSelectedItem())
         );
     }
 }
