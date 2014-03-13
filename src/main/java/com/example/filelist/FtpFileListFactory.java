@@ -59,7 +59,7 @@ class FtpFileListFactory
         format.setMinimumIntegerDigits(1);
         format.setMaximumIntegerDigits(4);
         port = new JFormattedTextField(format);
-        port.setText(String.valueOf(FtpFileList.DEFAULT_PORT));
+        port.setText(String.valueOf(FTP.DEFAULT_PORT));
         portLabel.setLabelFor(port);
         add(port);
 
@@ -99,7 +99,7 @@ class FtpFileListFactory
         try {
             port = Integer.parseInt(this.port.getText());
         } catch (NumberFormatException e) {
-            port = FtpFileList.DEFAULT_PORT;
+            port = FTP.DEFAULT_PORT;
         }
         //noinspection SuspiciousMethodCalls
         return new FtpFileList(

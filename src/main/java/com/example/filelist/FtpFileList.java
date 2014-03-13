@@ -10,8 +10,6 @@ import org.apache.commons.net.ftp.FTPSClient;
  */
 class FtpFileList extends FileList {
 
-    public static final int DEFAULT_PORT = 21;
-
     public FtpFileList(
             String hostname, int port, boolean useFTPS, String username, String password, int fileType)
             throws Exception {
