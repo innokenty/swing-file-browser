@@ -5,11 +5,11 @@ A simple swing-based file browser with ftp support and files preview.
 ## Running application
 
 ### Option one
- 1. mvn exec:java
+ 1. ```mvn exec:java```
 
 ### Option two
- 1. mvn package
- 2. java -jar target/com.example-0.1-SNAPSHOT.jar
+ 1. ```mvn package```
+ 2. ```java -jar target/com.example-0.1-SNAPSHOT.jar```
 
 ## Features
  1. Local files browsing
