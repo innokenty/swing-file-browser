@@ -1,7 +1,7 @@
 package com.example;
 
 import com.example.filelist.FileList;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author innokenty

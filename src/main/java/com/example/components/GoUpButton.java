@@ -7,7 +7,7 @@ import com.example.Icon;
 import com.example.filelist.FileList;
 import com.example.filelist.FileListModel;
 import com.example.utils.AbstractListDataListener;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
