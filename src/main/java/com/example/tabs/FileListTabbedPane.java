@@ -8,6 +8,9 @@ import com.example.filelist.FileList;
 import com.example.filelist.NewFileListDialog;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +27,14 @@ public class FileListTabbedPane
         add(new AddTabPanel(this));
         setEnabledAt(0, false);
         setTabComponentAt(0, new AddTabButton(this));
+        addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                if (getSelectedIndex() == getTabCount() - 1 && getTabCount() > 1) {
+                    setSelectedIndex(getSelectedIndex() - 1);
+                }
+                fireListChange();
+            }
+        });
     }
 
     @Override
@@ -49,7 +60,12 @@ public class FileListTabbedPane
 
     @Override
     public FileList getFileList() {
-        return ((FileListScrollPane) getSelectedComponent()).getFileList();
+        Component selected = getSelectedComponent();
+        if (selected instanceof FileListScrollPane) {
+            return ((FileListScrollPane) selected).getFileList();
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -59,8 +75,9 @@ public class FileListTabbedPane
 
     @Override
     public void fireListChange() {
+        FileList list = getFileList();
         for (FileListWatcher watcher : watchers) {
-            watcher.onFileListChanged(getFileList());
+            watcher.onFileListChanged(list);
         }
     }
 

@@ -7,6 +7,7 @@ import com.example.FileListWatcher;
 import com.example.filelist.FileList;
 import com.example.filelist.FileListModel;
 import com.example.utils.AbstractListDataListener;
+import com.sun.istack.internal.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
@@ -34,6 +35,7 @@ class ShowHiddenFilesButtonDecorator {
     }
 
     public <T extends AbstractButton> void decorate(T button) {
+        button.setEnabled(false);
         addStateChangeListener(button);
         addListChangedListener(button);
     }
@@ -52,7 +54,13 @@ class ShowHiddenFilesButtonDecorator {
         final ListDataListener listener = buildListDataListener(button);
         listContainer.onFileListChanged(new FileListWatcher() {
             @Override
-            public void onFileListChanged(FileList newFileList) {
+            public void onFileListChanged(@Nullable FileList newFileList) {
+                if (newFileList == null) {
+                    button.setEnabled(false);
+                    return;
+                }
+
+                button.setEnabled(true);
                 FileListModel model = newFileList.getModel();
 
                 if (Defaults.BUTTON_STATE_CHANGES_ON_LIST_CHANGE) {

@@ -7,6 +7,7 @@ import com.example.Icon;
 import com.example.filelist.FileList;
 import com.example.filelist.FileListModel;
 import com.example.utils.AbstractListDataListener;
+import com.sun.istack.internal.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
@@ -51,7 +52,12 @@ public class GoUpButton extends JButton {
 
         container.onFileListChanged(new FileListWatcher() {
             @Override
-            public void onFileListChanged(FileList newFileList) {
+            public void onFileListChanged(@Nullable FileList newFileList) {
+                if (newFileList == null) {
+                    GoUpButton.super.setEnabled(false);
+                    return;
+                }
+
                 GoUpButton.super.setEnabled(newFileList.getModel().canGoUp());
                 FileListModel model = newFileList.getModel();
                 model.removeListDataListener(canGoUpListener);
