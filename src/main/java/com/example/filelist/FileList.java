@@ -60,9 +60,16 @@ public abstract class FileList
         FileListEntry selectedFile = super.getSelectedValue();
         try {
             //noinspection unchecked
-            if (!getModel().openFolder(selectedFile)
-                    && !openArchive(selectedFile)) {
-                showFilePreview();
+            if (!getModel().openFolder(selectedFile)) {
+                FilePreview preview = FilePreviewFactory
+                        .getPreviewDialogFor(selectedFile);
+                if (preview != null) {
+                    preview.setLocationRelativeTo(this);
+                    preview.pack();
+                    preview.setVisible(true);
+                } else if (!openArchive(selectedFile)){
+                    Dialogs.sorryBro("Opening this type of files is not supported!", this);
+                }
             }
         } catch (Exception e) {
             Dialogs.unexpectedError(e, this);
@@ -114,17 +121,5 @@ public abstract class FileList
                 }
             }
         });
-    }
-
-    protected void showFilePreview() throws Exception {
-        FilePreview preview = FilePreviewFactory
-                .getPreviewDialogFor(super.getSelectedValue());
-        if (preview != null) {
-            preview.setLocationRelativeTo(this);
-            preview.pack();
-            preview.setVisible(true);
-        } else {
-            Dialogs.sorryBro("Opening this type of files is not supported!", this);
-        }
     }
 }
