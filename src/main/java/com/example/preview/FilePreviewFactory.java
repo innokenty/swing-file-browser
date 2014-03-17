@@ -23,12 +23,10 @@ public class FilePreviewFactory {
 
     public static FilePreview getPreviewDialogFor(FileListEntry file)
             throws Exception {
-        String mimetype = new MimetypesFileTypeMap().getContentType(file.getName());
-        FilePreviewBuilder builder = selectFirst(
-                BUILDERS,
-                having(on(FilePreviewBuilder.class)
-                        .supportsMimetype(mimetype))
-        );
+        String nameLC = file.getName().toLowerCase();
+        String mimetype = new MimetypesFileTypeMap().getContentType(nameLC);
+        FilePreviewBuilder builder = selectFirst(BUILDERS,
+                having(on(FilePreviewBuilder.class).supportsMimetype(mimetype)));
         return builder != null ? builder.getPreviewFor(file) : null;
     }
 }
