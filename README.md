@@ -5,7 +5,8 @@ A simple swing-based file browser with ftp support and files preview.
 ## Running application
 
 ### Option one
- 1. ```mvn exec:java```
+ 1. ```mvn clean compile```
+ 2. ```mvn exec:java```
 
 ### Option two
  1. ```mvn package```
