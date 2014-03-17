@@ -23,8 +23,8 @@ public class NewFileListDialog extends JDialog {
         setLayout(new BorderLayout());
 
         final JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.add(new LocalFileListFactory());
-        tabbedPane.add(new FtpFileListFactory());
+        tabbedPane.add(new NewLocalFileListPanel());
+        tabbedPane.add(new NewFtpFileListPanel());
         add(tabbedPane, BorderLayout.NORTH);
 
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));

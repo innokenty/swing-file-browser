@@ -6,11 +6,11 @@ import java.awt.*;
 /**
  * @author innokenty
  */
-class LocalFileListFactory
+class NewLocalFileListPanel
         extends JPanel
         implements FileListFactory<LocalFileList> {
 
-    public LocalFileListFactory() {
+    public NewLocalFileListPanel() {
         setName("Local");
         setLayout(new BorderLayout());
         JLabel label = new JLabel("<html>" +

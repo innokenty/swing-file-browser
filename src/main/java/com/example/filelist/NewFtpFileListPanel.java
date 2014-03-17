@@ -10,7 +10,7 @@ import java.util.LinkedHashMap;
 /**
  * @author innokenty
  */
-class FtpFileListFactory
+class NewFtpFileListPanel
         extends JPanel
         implements FileListFactory<FtpFileList> {
 
@@ -43,7 +43,7 @@ class FtpFileListFactory
 
     private final JComboBox<String> fileType;
 
-    public FtpFileListFactory() {
+    public NewFtpFileListPanel() {
         setName("FTP");
         setLayout(new SpringLayout());
 
