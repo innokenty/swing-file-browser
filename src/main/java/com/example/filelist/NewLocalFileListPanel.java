@@ -6,9 +6,7 @@ import java.awt.*;
 /**
  * @author innokenty
  */
-class NewLocalFileListPanel
-        extends JPanel
-        implements FileListFactory<LocalFileList> {
+class NewLocalFileListPanel extends FileListFactory<LocalFileList> {
 
     public NewLocalFileListPanel() {
         setName("Local");

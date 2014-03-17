@@ -10,9 +10,7 @@ import java.util.LinkedHashMap;
 /**
  * @author innokenty
  */
-class NewFtpFileListPanel
-        extends JPanel
-        implements FileListFactory<FtpFileList> {
+class NewFtpFileListPanel extends FileListFactory<FtpFileList> {
 
     private static class FileTypeOptions extends LinkedHashMap<String, Integer> {
 

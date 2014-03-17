@@ -1,9 +1,11 @@
 package com.example.filelist;
 
+import javax.swing.*;
+
 /**
  * @author innokenty
  */
-interface FileListFactory<T extends FileList> {
+abstract class FileListFactory<T extends FileList> extends JPanel {
 
-    T buildFileList() throws Exception;
+    public abstract T buildFileList() throws Exception;
 }

@@ -3,11 +3,19 @@ package com.example.filelist;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.List;
+
+import static java.util.Arrays.asList;
 
 /**
  * @author innokenty
  */
 public class NewFileListDialog extends JDialog {
+
+    private static final List<? extends FileListFactory> FACTORIES = asList(
+            new NewLocalFileListPanel(),
+            new NewFtpFileListPanel()
+    );
 
     private FileListFactory factory;
 
@@ -23,8 +31,9 @@ public class NewFileListDialog extends JDialog {
         setLayout(new BorderLayout());
 
         final JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.add(new NewLocalFileListPanel());
-        tabbedPane.add(new NewFtpFileListPanel());
+        for (FileListFactory factory : FACTORIES) {
+            tabbedPane.add(factory);
+        }
         add(tabbedPane, BorderLayout.NORTH);
 
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
