@@ -7,7 +7,7 @@ import java.io.File;
 /**
  * @author innokenty
  */
-public class BackwardsLinkedLocalEntry extends LocalFileListEntry {
+class BackwardsLinkedLocalEntry extends LocalFileListEntry {
 
     private final LocalFileListEntry parent;
 
