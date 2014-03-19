@@ -13,6 +13,7 @@ import java.util.Stack;
 
 import static com.example.utils.StreamUnzipper.getRandomTempFolder;
 import static com.example.utils.StreamUnzipper.unzip;
+import static java.awt.event.KeyEvent.VK_BACK_SPACE;
 import static java.awt.event.KeyEvent.VK_ENTER;
 import static javax.swing.KeyStroke.getKeyStroke;
 
@@ -31,6 +32,7 @@ public abstract class FileList
         setCellRenderer(new FileListEntryRenderer());
         initOpeningSelectedOnEnter();
         initOpeningSelectedOnDoubleClick();
+        initGoingUpOnBackspace();
     }
 
 
@@ -98,16 +100,34 @@ public abstract class FileList
 
     private void initOpeningSelectedOnEnter() {
         String openSelectedKey = "openSelected";
-        KeyStroke enterKeyStroke = getKeyStroke(VK_ENTER, 0);
-        super.getInputMap().put(enterKeyStroke, openSelectedKey);
+        super.getInputMap().put(getKeyStroke(VK_ENTER, 0), openSelectedKey);
         super.getActionMap().put(openSelectedKey, openSelectedAction());
     }
 
-    private AbstractAction openSelectedAction() {
+    private void initGoingUpOnBackspace() {
+        String goUpKey = "goUp";
+        super.getInputMap().put(getKeyStroke(VK_BACK_SPACE, 0), goUpKey);
+        super.getActionMap().put(goUpKey, goUpAction());
+    }
+
+    private Action openSelectedAction() {
         return new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 openSelected();
+            }
+        };
+    }
+
+    private Action goUpAction() {
+        return new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    getModel().goUp();
+                } catch (Exception ex) {
+                    Dialogs.unexpectedError(ex, FileList.this);
+                }
             }
         };
     }
