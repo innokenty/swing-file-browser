@@ -1,5 +1,7 @@
 package com.example.filelist;
 
+import com.example.Dialogs;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -17,7 +19,7 @@ public class NewFileListDialog extends JDialog {
             new NewFtpFileListPanel()
     );
 
-    private FileListFactory factory;
+    private FileList fileList;
 
     public NewFileListDialog(Component owner) {
         super(JOptionPane.getFrameForComponent(owner));
@@ -55,8 +57,15 @@ public class NewFileListDialog extends JDialog {
         return new JButton(new AbstractAction("OK") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                NewFileListDialog.this.dispose();
-                factory = ((FileListFactory) tabbedPane.getSelectedComponent());
+                try {
+                    fileList = ((FileListFactory) tabbedPane.getSelectedComponent())
+                            .buildFileList();
+                    NewFileListDialog.this.dispose();
+                } catch (Exception ex) {
+                    Dialogs.error(
+                            "Unable to create list!", ex, NewFileListDialog.this
+                    );
+                }
             }
         });
     }
@@ -74,6 +83,6 @@ public class NewFileListDialog extends JDialog {
         pack();
         setLocationRelativeTo(getOwner());
         setVisible(true);
-        return factory == null ? null : factory.buildFileList();
+        return fileList == null ? null : fileList;
     }
 }

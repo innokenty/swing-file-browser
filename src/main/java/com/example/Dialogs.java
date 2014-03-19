@@ -1,7 +1,5 @@
 package com.example;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -11,17 +9,6 @@ import java.awt.*;
 // TODO fix image sizes
 public class Dialogs {
 
-    public static void unexpectedError(Exception e, Component parent) {
-        JOptionPane.showMessageDialog(
-                parent,
-                ExceptionUtils.getRootCauseMessage(e),
-                e.getMessage(),
-                JOptionPane.ERROR_MESSAGE,
-                Icon.OOPS.build()
-        );
-        e.printStackTrace();
-    }
-
     public static void sorryBro(String message, Component parent) {
         JOptionPane.showMessageDialog(
                 parent,
@@ -30,5 +17,20 @@ public class Dialogs {
                 JOptionPane.ERROR_MESSAGE,
                 Icon.SORRY_BRO.build()
         );
+    }
+
+    public static void unexpectedError(Exception e, Component parent) {
+        error(e.getMessage(), e, parent);
+    }
+
+    public static void error(String title, Throwable e, Component parent) {
+        JOptionPane.showMessageDialog(
+                parent,
+                e.getMessage(),
+                title,
+                JOptionPane.ERROR_MESSAGE,
+                Icon.OOPS.build()
+        );
+        e.printStackTrace();
     }
 }
