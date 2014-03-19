@@ -25,7 +25,6 @@ class TempFolderFileListModel extends LocalFileListModel {
     protected boolean goUpImpl() throws Exception {
         if (getCurrentFolder() instanceof TempFolderFileListEntry) {
             modelSwitcher.switchBack();
-
             return true;
         } else {
             return super.goUpImpl();

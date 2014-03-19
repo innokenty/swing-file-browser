@@ -56,7 +56,7 @@ public abstract class FileList
         return (FileListModel<FileListEntry>) super.getModel();
     }
 
-    public void openSelected() {
+    private void openSelected() {
         FileListEntry selectedFile = super.getSelectedValue();
         try {
             //noinspection unchecked
@@ -96,11 +96,11 @@ public abstract class FileList
 
     /* GUI INITIALIZATION METHODS */
 
-    protected void initOpeningSelectedOnEnter() {
-        final String openFolderKey = "openSelectedFile";
+    private void initOpeningSelectedOnEnter() {
+        String openSelectedKey = "openSelected";
         KeyStroke enterKeyStroke = getKeyStroke(VK_ENTER, 0);
-        super.getInputMap().put(enterKeyStroke, openFolderKey);
-        super.getActionMap().put(openFolderKey, openSelectedAction());
+        super.getInputMap().put(enterKeyStroke, openSelectedKey);
+        super.getActionMap().put(openSelectedKey, openSelectedAction());
     }
 
     private AbstractAction openSelectedAction() {
@@ -112,7 +112,7 @@ public abstract class FileList
         };
     }
 
-    protected void initOpeningSelectedOnDoubleClick() {
+    private void initOpeningSelectedOnDoubleClick() {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {

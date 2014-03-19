@@ -61,11 +61,11 @@ class FtpFileListModel extends FileListModel<FtpFileListEntry> {
 
     @Override
     protected boolean goUpImpl() throws Exception {
-        boolean result = client.changeToParentDirectory();
-        if (result) {
+        if (client.changeToParentDirectory()) {
             repaint();
+            return true;
         }
-        return result;
+        return false;
     }
 
     @Override
