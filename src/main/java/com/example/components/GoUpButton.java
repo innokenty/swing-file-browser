@@ -38,6 +38,8 @@ public class GoUpButton extends JButton {
                                         "Or something's broken...",
                                 container.getFileList()
                         );
+                    } else {
+                        container.getFileList().requestFocusInWindow();
                     }
                 } catch (Exception ex) {
                     Dialogs.unexpectedError(ex, container.getFileList());
