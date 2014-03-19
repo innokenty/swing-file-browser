@@ -51,6 +51,7 @@ public class FileBrowser extends JFrame {
     @Override
     public void setVisible(boolean b) {
         super.setVisible(b);
+        tabbedPane.addNewTab();
     }
 
     public static void main(String[] args) throws Exception {
