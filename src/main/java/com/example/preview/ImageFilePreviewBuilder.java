@@ -5,7 +5,7 @@ import com.example.filelist.FileListEntry;
 /**
  * @author innokenty
  */
-public class ImageFilePreviewBuilder implements FilePreviewBuilder {
+class ImageFilePreviewBuilder implements FilePreviewBuilder {
 
     @Override
     public boolean supportsMimetype(String mimetype) {
