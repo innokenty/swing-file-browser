@@ -21,8 +21,6 @@ public class NewFileListDialog extends JDialog {
 
     public NewFileListDialog(Component owner) {
         super(JOptionPane.getFrameForComponent(owner));
-        setLocationRelativeTo(owner);
-
         initUIOptions();
 
         final JTabbedPane tabbedPane = listSelectionPane();
@@ -76,6 +74,7 @@ public class NewFileListDialog extends JDialog {
 
     public FileList getFileList() throws Exception {
         pack();
+        setLocationRelativeTo(getOwner());
         setVisible(true);
         return factory == null ? null : factory.buildFileList();
     }
