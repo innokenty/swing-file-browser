@@ -23,18 +23,16 @@ public class NewFileListDialog extends JDialog {
         super(JOptionPane.getFrameForComponent(owner));
         initUIOptions();
 
-        final JTabbedPane tabbedPane = listSelectionPane();
+        JTabbedPane tabbedPane = listSelectionPane();
         add(tabbedPane, BorderLayout.NORTH);
         add(bottomPanel(tabbedPane), BorderLayout.SOUTH);
     }
 
     private void initUIOptions() {
-        setPreferredSize(new Dimension(300, 300));
-        setMinimumSize(getPreferredSize());
-        setMaximumSize(new Dimension(400, 300));
         setTitle("Please select new tab type");
+        setPreferredSize(new Dimension(300, 300));
+        setResizable(false);
         setModal(true);
-
         setLayout(new BorderLayout());
     }
 
