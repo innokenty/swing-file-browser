@@ -1,7 +1,11 @@
 package com.example.filelist;
 
+import com.example.Defaults;
 import com.example.utils.SpringUtilities;
 import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPReply;
+import org.apache.commons.net.ftp.FTPSClient;
 
 import javax.swing.*;
 import java.text.DecimalFormat;
@@ -93,20 +97,51 @@ class NewFtpFileListPanel extends FileListFactory<FtpFileList> {
 
     @Override
     public FtpFileList buildFileList() throws Exception {
+        //noinspection SuspiciousMethodCalls
+        FTPClient client = buildSimpleClient(
+                hostname.getText(),
+                getPort(),
+                ftps.isSelected(),
+                username.getText(),
+                new String(password.getPassword()),
+                FILE_TYPE_OPTIONS.get(fileType.getSelectedItem())
+        );
+        return new FtpFileList(client);
+    }
+
+    private int getPort() {
         int port;
         try {
             port = Integer.parseInt(this.port.getText());
         } catch (NumberFormatException e) {
             port = FTP.DEFAULT_PORT;
         }
-        //noinspection SuspiciousMethodCalls
-        return new FtpFileList(
-                hostname.getText(),
-                port,
-                ftps.isSelected(),
-                username.getText(),
-                new String(password.getPassword()),
-                FILE_TYPE_OPTIONS.get(fileType.getSelectedItem())
-        );
+        return port;
+    }
+
+    private static FTPClient buildSimpleClient(
+            String hostname, int port, boolean useFTPS, String username, String password, int fileType)
+            throws Exception {
+
+        FTPClient client = useFTPS ? new FTPSClient() : new FTPClient();
+        client.setDataTimeout(Defaults.FTP_DATA_TIMEOUT);
+        client.setControlKeepAliveTimeout(Defaults.FTP_CONTROL_IDLE);
+        client.connect(hostname, port);
+        client.enterLocalPassiveMode();
+        client.setSoTimeout(Defaults.FTP_SO_TIMEOUT);
+        int reply = client.getReplyCode();
+
+        if (!FTPReply.isPositiveCompletion(reply)) {
+            throw new FtpClientException("Unable to connect! Sorry... " +
+                    "Response code is " + reply + ", that's all I know");
+        }
+
+        if (!client.login(username, password)) {
+            throw new FtpClientException("Unable to login to the ftp server");
+        }
+        client.setFileType(fileType);
+
+        client.setKeepAlive(true);
+        return client;
     }
 }
