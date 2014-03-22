@@ -1,20 +1,31 @@
 package com.example.filelist;
 
-import com.example.Defaults;
 import com.example.utils.SpringUtilities;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPReply;
-import org.apache.commons.net.ftp.FTPSClient;
+import org.hamcrest.Matcher;
 
 import javax.swing.*;
 import java.text.DecimalFormat;
 import java.util.LinkedHashMap;
 
+import static org.cthul.matchers.CthulMatchers.matchesPattern;
+import static org.hamcrest.Matchers.*;
+
 /**
  * @author innokenty
  */
 class NewFtpFileListPanel extends FileListFactory<FtpFileList> {
+
+    /**
+     * based on <a href="http://stackoverflow.com/questions/1418423/the-hostname-regex">this</a>
+     * stackoverflow answer but extended to allow internationalized hostnames based on an answer
+     * <a href="http://stackoverflow.com/questions/14636540/java-regular-expression-with-international-letters">here</a>
+     */
+    private static final String HOSTNAME_REGEX
+            = "^(?=.{1,255}$)[0-9\\p{IsAlphabetic}](?:(?:[0-9\\p{IsAlphabetic}]|-)" +
+            "{0,61}[0-9\\p{IsAlphabetic}])?(?:\\.[0-9\\p{IsAlphabetic}]" +
+            "(?:(?:[0-9\\p{IsAlphabetic}]|-){0,61}[0-9\\p{IsAlphabetic}])?)*?$";
 
     private static class FileTypeOptions extends LinkedHashMap<String, Integer> {
 
@@ -25,7 +36,7 @@ class NewFtpFileListPanel extends FileListFactory<FtpFileList> {
             put("LOCAL FILE TYPE", FTP.LOCAL_FILE_TYPE);
         }
 
-        String[] getKeysAsArray() {
+        public String[] getKeysAsArray() {
             return this.keySet().toArray(new String[this.size()]);
         }
     }
@@ -49,7 +60,10 @@ class NewFtpFileListPanel extends FileListFactory<FtpFileList> {
         setName("FTP");
         setLayout(new SpringLayout());
 
-        JLabel hostnameLabel = new JLabel("hostname", JLabel.TRAILING);
+        JLabel hostnameLabel = new JLabel(
+                "<html>hostname <font color=\"red\">*</font></html>",
+                JLabel.TRAILING
+        );
         add(hostnameLabel);
         hostname = new JTextField();
         hostnameLabel.setLabelFor(hostname);
@@ -95,18 +109,8 @@ class NewFtpFileListPanel extends FileListFactory<FtpFileList> {
                 6, 6);
     }
 
-    @Override
-    public FtpFileList buildFileList() throws Exception {
-        //noinspection SuspiciousMethodCalls
-        FTPClient client = buildSimpleClient(
-                hostname.getText(),
-                getPort(),
-                ftps.isSelected(),
-                username.getText(),
-                new String(password.getPassword()),
-                FILE_TYPE_OPTIONS.get(fileType.getSelectedItem())
-        );
-        return new FtpFileList(client);
+    private String getHostname() {
+        return hostname.getText();
     }
 
     private int getPort() {
@@ -119,29 +123,72 @@ class NewFtpFileListPanel extends FileListFactory<FtpFileList> {
         return port;
     }
 
-    private static FTPClient buildSimpleClient(
-            String hostname, int port, boolean useFTPS, String username, String password, int fileType)
-            throws Exception {
+    private boolean isFtps() {
+        return ftps.isSelected();
+    }
 
-        FTPClient client = useFTPS ? new FTPSClient() : new FTPClient();
-        client.setDataTimeout(Defaults.FTP_DATA_TIMEOUT);
-        client.setControlKeepAliveTimeout(Defaults.FTP_CONTROL_IDLE);
-        client.connect(hostname, port);
-        client.enterLocalPassiveMode();
-        client.setSoTimeout(Defaults.FTP_SO_TIMEOUT);
-        int reply = client.getReplyCode();
+    private String getUsername() {
+        return username.getText();
+    }
 
-        if (!FTPReply.isPositiveCompletion(reply)) {
-            throw new FtpClientException("Unable to connect! Sorry... " +
-                    "Response code is " + reply + ", that's all I know");
+    private String getPassword() {
+        return new String(password.getPassword());
+    }
+
+    private Integer getFileType() {
+        //noinspection SuspiciousMethodCalls
+        return FILE_TYPE_OPTIONS.get(fileType.getSelectedItem());
+    }
+
+    @Override
+    public FtpFileList buildFileList() throws Exception {
+        verifyInput();
+        return new FtpFileList(buildClient());
+    }
+
+    private void verifyInput() throws ListCreationException {
+        assertThat(
+                "hostname must not be empty!",
+                getHostname(),
+                is(not(isEmptyString()))
+        );
+        assertThat(
+                "hostname is not valid! must be a combination of " +
+                        "digits, letters, dots and hyphens, " +
+                        "starting and ending with a letter or a digit" +
+                        "and not containing two dots in a row!",
+                getHostname(),
+                matchesPattern(HOSTNAME_REGEX)
+        );
+        assertThat(
+                "username and password must be either both filled or both empty!",
+                getUsername().isEmpty(),
+                is(equalTo(getPassword().isEmpty()))
+        );
+    }
+
+    private <T> void assertThat(String message, T actual, Matcher<T> matcher)
+            throws ListCreationException {
+        if (!matcher.matches(actual)) {
+            throw new ListCreationException(message);
         }
+    }
 
-        if (!client.login(username, password)) {
-            throw new FtpClientException("Unable to login to the ftp server");
+    private FTPClient buildClient() throws Exception {
+        return FtpClientFactory.buildSimpleClient(
+                getHostname(),
+                getPort(),
+                isFtps(),
+                getUsername(),
+                getPassword(),
+                getFileType()
+        );
+    }
+
+    public static class ListCreationException extends Exception {
+
+        public ListCreationException(String message) {
+            super(message);
         }
-        client.setFileType(fileType);
-
-        client.setKeepAlive(true);
-        return client;
     }
 }
