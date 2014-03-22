@@ -3,6 +3,7 @@ package com.example;
 import javax.swing.*;
 
 /**
+ * TODO fix image sizes
  * @author innokenty
  */
 public enum Icon {

@@ -6,7 +6,6 @@ import java.awt.*;
 /**
  * @author innokenty
  */
-// TODO fix image sizes
 public class Dialogs {
 
     public static void sorryBro(String message, Component parent) {

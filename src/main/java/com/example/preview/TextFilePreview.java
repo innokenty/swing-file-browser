@@ -18,7 +18,6 @@ class TextFilePreview extends FilePreview {
     public TextFilePreview(FileListEntry file) throws Exception {
         super(file.getName());
 
-        //TODO extract into properties
         setMinimumSize(new Dimension(MIN_SIZE, MIN_SIZE));
         setPreferredSize(new Dimension(PREF_SIZE, PREF_SIZE));
 

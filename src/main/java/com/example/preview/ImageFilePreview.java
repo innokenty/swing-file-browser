@@ -11,6 +11,8 @@ import java.awt.event.ActionListener;
 import static java.lang.Math.min;
 
 /**
+ * TODO keyboard shortcuts
+ * TODO custom zoom input
  * @author innokenty
  */
 class ImageFilePreview extends FilePreview {
