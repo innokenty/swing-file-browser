@@ -103,14 +103,16 @@ public abstract class FileList
     /* GUI INITIALIZATION METHODS */
 
     private void initOpeningSelectedOnEnter() {
-        String openSelectedKey = "openSelected";
-        super.getInputMap().put(getKeyStroke(VK_ENTER, 0), openSelectedKey);
+        String openSelectedKey = "com.example.filelist.FileList.openSelected";
+        super.getInputMap(WHEN_IN_FOCUSED_WINDOW)
+                .put(getKeyStroke(VK_ENTER, 0), openSelectedKey);
         super.getActionMap().put(openSelectedKey, openSelectedAction());
     }
 
     private void initGoingUpOnBackspace() {
-        String goUpKey = "goUp";
-        super.getInputMap().put(getKeyStroke(VK_BACK_SPACE, 0), goUpKey);
+        String goUpKey = "com.example.filelist.FileList.goUp";
+        super.getInputMap(WHEN_IN_FOCUSED_WINDOW)
+                .put(getKeyStroke(VK_BACK_SPACE, 0), goUpKey);
         super.getActionMap().put(goUpKey, goUpAction());
     }
 
