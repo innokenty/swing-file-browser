@@ -6,15 +6,26 @@ import javax.swing.*;
  * @author innokenty
  */
 public abstract class FileListModel<T extends FileListEntry>
-        extends DefaultListModel<T> {
+        extends DefaultListModel<FileListEntry> {
 
-    public final boolean openFolder(T folder) throws Exception {
-        if (!folder.isDirectory()) {
-            return false;
-        }
-        if (openFolderImpl(folder)) {
-            repaint();
+    public final boolean openFolder(FileListEntry folder) throws Exception {
+        if (folder instanceof GoUpFileListEntry) {
+            goUp();
             return true;
+        } else if (!folder.isDirectory()) {
+            return false;
+        } else {
+            try {
+                //noinspection unchecked
+                if (openFolderImpl((T) folder)) {
+                    repaint();
+                    return true;
+                }
+            } catch (ClassCastException e) {
+                throw new FileListException(
+                        "Trying to open folder of invalid type for this list!", e
+                );
+            }
         }
         return false;
     }
@@ -34,6 +45,9 @@ public abstract class FileListModel<T extends FileListEntry>
 
     protected final void repaint() throws Exception {
         clear();
+        if (canGoUp()) {
+            addElement(new GoUpFileListEntry());
+        }
         for (T entry : listFiles()) {
             addElement(entry);
         }

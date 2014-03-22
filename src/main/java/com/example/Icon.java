@@ -14,6 +14,7 @@ public enum Icon {
     OOPS("img/oops.png"),
     SORRY_BRO("img/sorry-bro.jpg"),
     UP("img/up.png"),
+    UP_SMALL("img/up-small.png"),
     GHOST("img/ghost.png"),
     PLUS("img/plus.png"),
     ZOOM_IN("img/zoom_in.png"),

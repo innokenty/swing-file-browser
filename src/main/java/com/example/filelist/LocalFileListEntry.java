@@ -36,6 +36,13 @@ class LocalFileListEntry implements FileListEntry {
 
     @Override
     public InputStream getInputStream() throws FileNotFoundException {
+        if (isDirectory()) {
+            throw new UnsupportedOperationException("Calling " +
+                    "FileListEntry.getInputStream on a directory not supported! " +
+                    "You should call the isDirectory() before invocation of this method."
+            );
+        }
+
         return new FileInputStream(delegate);
     }
 

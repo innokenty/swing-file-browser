@@ -34,6 +34,13 @@ class FtpFileListEntry implements FileListEntry {
 
     @Override
     public InputStream getInputStream() throws Exception {
+        if (isDirectory()) {
+            throw new UnsupportedOperationException("Calling " +
+                    "FileListEntry.getInputStream on a directory not supported! " +
+                    "You should call the isDirectory() before invocation of this method."
+            );
+        }
+
         InputStream stream = client.retrieveFileStream(getName());
         if (!client.completePendingCommand()) {
             throw new FtpClientException("File transfer failed!");

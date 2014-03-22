@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
-import static javax.swing.SwingConstants.LEFT;
 import static org.apache.commons.io.FilenameUtils.getExtension;
 
 /**
@@ -22,7 +21,8 @@ class FileListEntryRenderer implements ListCellRenderer<FileListEntry> {
             boolean isSelected,
             boolean cellHasFocus
     ) {
-        JLabel label = new JLabel(file.getName(), getIcon(file), LEFT);
+        JLabel label = new JLabel(file.getName());
+        label.setIcon(getIcon(file, label.getPreferredSize()));
         if (isSelected) {
             label.setOpaque(true);
             label.setBackground(list.getSelectionBackground());
@@ -32,9 +32,14 @@ class FileListEntryRenderer implements ListCellRenderer<FileListEntry> {
         return label;
     }
 
-    private static Icon getIcon(FileListEntry file) {
+    private Icon getIcon(FileListEntry file, Dimension size) {
         Icon icon;
-        if (file.isDirectory()) {
+        if (file instanceof GoUpFileListEntry) {
+            icon = com.example.Icon.UP_SMALL.build(
+                    (int) size.getWidth(),
+                    (int) size.getHeight()
+            );
+        } else if (file.isDirectory()) {
             icon = UIManager.getDefaults().getIcon("FileView.directoryIcon");
         } else {
             try {
