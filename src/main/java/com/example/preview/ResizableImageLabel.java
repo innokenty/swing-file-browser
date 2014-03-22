@@ -16,7 +16,7 @@ class ResizableImageLabel extends JLabel {
 
     private static final double ZOOM_BASE = 1.2;
 
-    private static final int SCALE_METHOD = Image.SCALE_DEFAULT;
+    private static final int SCALE_METHOD = Image.SCALE_SMOOTH;
 
     private final BufferedImage originalImage;
 
