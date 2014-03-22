@@ -1,8 +1,8 @@
 package com.example.tabs;
 
 import com.example.Dialogs;
-import com.example.FileListChangeListener;
 import com.example.FileListContainer;
+import com.example.FileListSwitchListener;
 import com.example.TabsGenerator;
 import com.example.filelist.FileList;
 import com.example.filelist.NewFileListDialog;
@@ -21,7 +21,7 @@ public class FileListTabbedPane
         extends JTabbedPane
         implements TabsGenerator, FileListContainer {
 
-    private final List<FileListChangeListener> watchers = new ArrayList<>();
+    private final List<FileListSwitchListener> watchers = new ArrayList<>();
 
     public FileListTabbedPane() {
         add(new AddTabPanel(this));
@@ -32,7 +32,7 @@ public class FileListTabbedPane
                 if (getSelectedIndex() == getTabCount() - 1 && getTabCount() > 1) {
                     setSelectedIndex(getSelectedIndex() - 1);
                 }
-                fireListChange();
+                fireListSwitched();
             }
         });
     }
@@ -54,7 +54,7 @@ public class FileListTabbedPane
         insertTab(null, null, new FileListScrollPane(fileList), null, index);
         setTabComponentAt(index, new FileListTabButtonComponent(fileList, this));
         setSelectedIndex(index);
-        fireListChange();
+        fireListSwitched();
         getFileList().requestFocusInWindow();
     }
 
@@ -69,15 +69,15 @@ public class FileListTabbedPane
     }
 
     @Override
-    public void addFileListChangeListener(FileListChangeListener watcher) {
+    public void addFileListSwitchListener(FileListSwitchListener watcher) {
         watchers.add(watcher);
     }
 
     @Override
-    public void fireListChange() {
+    public void fireListSwitched() {
         FileList list = getFileList();
-        for (FileListChangeListener watcher : watchers) {
-            watcher.onFileListChanged(list);
+        for (FileListSwitchListener watcher : watchers) {
+            watcher.onFileListSwitched(list);
         }
     }
 

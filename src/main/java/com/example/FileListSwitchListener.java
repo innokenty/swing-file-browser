@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author innokenty
  */
-public interface FileListChangeListener {
+public interface FileListSwitchListener {
 
-    void onFileListChanged(@Nullable FileList newFileList);
+    void onFileListSwitched(@Nullable FileList newFileList);
 }

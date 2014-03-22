@@ -1,8 +1,8 @@
 package com.example.components;
 
 import com.example.Dialogs;
-import com.example.FileListChangeListener;
 import com.example.FileListContainer;
+import com.example.FileListSwitchListener;
 import com.example.Icon;
 import com.example.filelist.FileList;
 import com.example.filelist.FileListModel;
@@ -52,9 +52,9 @@ public class GoUpButton extends JButton {
         final AbstractListDataListener canGoUpListener
                 = buildCanGoUpListener(container);
 
-        container.addFileListChangeListener(new FileListChangeListener() {
+        container.addFileListSwitchListener(new FileListSwitchListener() {
             @Override
-            public void onFileListChanged(@Nullable FileList newFileList) {
+            public void onFileListSwitched(@Nullable FileList newFileList) {
                 if (newFileList == null) {
                     GoUpButton.super.setEnabled(false);
                     return;
