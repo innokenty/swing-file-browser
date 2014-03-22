@@ -13,10 +13,10 @@ A simple swing-based file browser with ftp support and files preview.
  1. ```java -jar target/com.example-0.1-SNAPSHOT.jar```
 
 ## Features
- 1. local files browsing
- 1. FTP folders browsing
+ 1. local & ftp files browsing
  1. ftp host:port, ftps, file encoding and anonymous login settings
  1. file and directory icons based on the underlying system ui
+ 1. list entry go up a tree on the top
  1. tabs for different file lists
  1. toggling showing hidden files via toolbar or via menu item
  1. hotkeys support: enter for opening selected item, backspace for going up a tree
