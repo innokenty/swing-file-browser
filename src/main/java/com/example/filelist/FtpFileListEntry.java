@@ -12,26 +12,29 @@ class FtpFileListEntry implements FileListEntry {
 
     private final FTPClient client;
 
-    private final FTPFile delegate;
+    private final boolean isDirectory;
+
+    private final String name;
 
     public FtpFileListEntry(FTPClient client, FTPFile delegate) {
         this.client = client;
-        this.delegate = delegate;
+        isDirectory = delegate.isDirectory();
+        name = delegate.getName();
     }
 
     @Override
     public boolean isDirectory() {
-        return delegate.isDirectory();
+        return isDirectory;
     }
 
     @Override
     public String getName() {
-        return delegate.getName();
+        return name;
     }
 
     @Override
     public InputStream getInputStream() throws Exception {
-        InputStream stream = client.retrieveFileStream(delegate.getName());
+        InputStream stream = client.retrieveFileStream(getName());
         if (!client.completePendingCommand()) {
             throw new FtpClientException("File transfer failed!");
         }
