@@ -1,5 +1,6 @@
 package com.example.filelist;
 
+import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 
 /**
@@ -8,18 +9,10 @@ import java.io.File;
 class LocalFileList extends FileList {
 
     public LocalFileList() throws Exception {
-        this(getDefaultStartingFolder());
+        this(FileSystemView.getFileSystemView().getHomeDirectory());
     }
 
     public LocalFileList(File startingFolder) throws Exception {
         super(new LocalFileListModel(startingFolder));
-    }
-
-    private static File getDefaultStartingFolder() {
-        String homeDirPath = System.getProperty("user.home");
-        //noinspection ConstantConditions
-        return homeDirPath != null || new File(homeDirPath).isDirectory()
-                ? new File(homeDirPath)
-                : new File(System.getProperty("user.dir"));
     }
 }
