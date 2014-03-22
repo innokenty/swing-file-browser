@@ -59,32 +59,36 @@ public abstract class FileList
     }
 
     private void openSelected() {
-        FileListEntry selectedFile = super.getSelectedValue();
+        FileListEntry file = super.getSelectedValue();
         try {
-            //noinspection unchecked
-            if (!getModel().openFolder(selectedFile)) {
-                FilePreview preview = FilePreviewFactory
-                        .getPreviewDialogFor(selectedFile);
-                if (preview != null) {
-                    preview.setLocationRelativeTo(this);
-                    preview.pack();
-                    preview.setVisible(true);
-                } else if (!openArchive(selectedFile)){
-                    Dialogs.sorryBro("Opening this type of files is not supported!", this);
-                }
+            if (!getModel().openFolder(file)
+                    && !openFile(file)
+                    && !openArchive(file)) {
+                Dialogs.sorryBro("Opening this type of files is not supported!", this);
             }
         } catch (Exception e) {
             Dialogs.unexpectedError(e, this);
         }
     }
 
-    private boolean openArchive(FileListEntry selectedFile) throws Exception {
+    private boolean openFile(FileListEntry file) throws Exception {
+        FilePreview preview = FilePreviewFactory.getPreviewDialogFor(file);
+        if (preview != null) {
+            preview.setLocationRelativeTo(this);
+            preview.pack();
+            preview.setVisible(true);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean openArchive(FileListEntry file) throws Exception {
         File tmp = getRandomTempFolder();
         tmp.deleteOnExit();
-        boolean unzippedSuccessfully = unzip(selectedFile.getInputStream(), tmp);
+        boolean unzippedSuccessfully = unzip(file.getInputStream(), tmp);
         if (unzippedSuccessfully) {
             rememberedModels.push(getModel());
-            ListModel model = new TempFolderFileListModel(tmp, selectedFile.getName(), this);
+            ListModel model = new TempFolderFileListModel(tmp, file.getName(), this);
             //noinspection unchecked
             setModel(model);
         }
