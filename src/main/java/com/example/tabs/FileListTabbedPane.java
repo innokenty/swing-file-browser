@@ -1,8 +1,8 @@
 package com.example.tabs;
 
 import com.example.Dialogs;
+import com.example.FileListChangeListener;
 import com.example.FileListContainer;
-import com.example.FileListWatcher;
 import com.example.TabsGenerator;
 import com.example.filelist.FileList;
 import com.example.filelist.NewFileListDialog;
@@ -21,7 +21,7 @@ public class FileListTabbedPane
         extends JTabbedPane
         implements TabsGenerator, FileListContainer {
 
-    private final List<FileListWatcher> watchers = new ArrayList<>();
+    private final List<FileListChangeListener> watchers = new ArrayList<>();
 
     public FileListTabbedPane() {
         add(new AddTabPanel(this));
@@ -69,14 +69,14 @@ public class FileListTabbedPane
     }
 
     @Override
-    public void onFileListChanged(FileListWatcher watcher) {
+    public void addFileListChangeListener(FileListChangeListener watcher) {
         watchers.add(watcher);
     }
 
     @Override
     public void fireListChange() {
         FileList list = getFileList();
-        for (FileListWatcher watcher : watchers) {
+        for (FileListChangeListener watcher : watchers) {
             watcher.onFileListChanged(list);
         }
     }

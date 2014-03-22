@@ -2,8 +2,8 @@ package com.example.components;
 
 import com.example.Defaults;
 import com.example.Dialogs;
+import com.example.FileListChangeListener;
 import com.example.FileListContainer;
-import com.example.FileListWatcher;
 import com.example.filelist.FileList;
 import com.example.filelist.FileListModel;
 import com.example.utils.AbstractListDataListener;
@@ -55,7 +55,7 @@ class ShowHiddenFilesButtonDecorator {
 
     private <T extends AbstractButton> void addListChangedListener(final T button) {
         final ListDataListener listener = buildListDataListener(button);
-        listContainer.onFileListChanged(new FileListWatcher() {
+        listContainer.addFileListChangeListener(new FileListChangeListener() {
             @Override
             public void onFileListChanged(@Nullable FileList newFileList) {
                 if (newFileList == null) {

@@ -9,7 +9,7 @@ public interface FileListContainer {
 
     FileList getFileList();
 
-    void onFileListChanged(FileListWatcher watcher);
+    void addFileListChangeListener(FileListChangeListener watcher);
 
     void fireListChange();
 }

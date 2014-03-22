@@ -1,8 +1,8 @@
 package com.example.components;
 
 import com.example.Dialogs;
+import com.example.FileListChangeListener;
 import com.example.FileListContainer;
-import com.example.FileListWatcher;
 import com.example.Icon;
 import com.example.filelist.FileList;
 import com.example.filelist.FileListModel;
@@ -52,7 +52,7 @@ public class GoUpButton extends JButton {
         final AbstractListDataListener canGoUpListener
                 = buildCanGoUpListener(container);
 
-        container.onFileListChanged(new FileListWatcher() {
+        container.addFileListChangeListener(new FileListChangeListener() {
             @Override
             public void onFileListChanged(@Nullable FileList newFileList) {
                 if (newFileList == null) {
