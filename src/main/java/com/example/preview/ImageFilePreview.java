@@ -2,17 +2,20 @@ package com.example.preview;
 
 import com.example.Icon;
 import com.example.filelist.FileListEntry;
+import com.example.utils.WindowPositioningUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.concurrent.ExecutionException;
 
 import static java.lang.Math.min;
 
 /**
  * TODO keyboard shortcuts
  * TODO custom zoom input
+ *
  * @author innokenty
  */
 class ImageFilePreview extends FilePreview {
@@ -22,22 +25,67 @@ class ImageFilePreview extends FilePreview {
     private static final int PREF_SIZE = 800;
 
 
-    private final ResizableImageLabel image;
+    private ResizableImageLabel image;
 
-    private final JScrollPane scrollPane;
+    private JScrollPane scrollPane;
+
+    private JLabel loadingLabel = new JLabel(
+            "<html>" +
+                "<div style=\"text-align: center;\">" +
+                    "<div>Loading...</div>" +
+                    "<div>Please wait.</div>" +
+                "</div>" +
+            "</html>"
+    ); {
+        loadingLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        loadingLabel.setPreferredSize(new Dimension(300, 300));
+    }
 
 
-    public ImageFilePreview(FileListEntry file) throws Exception {
+    public ImageFilePreview(final FileListEntry file) throws Exception {
         super(file.getName());
+        loading(true);
 
-        image = new ResizableImageLabel(file.getInputStream());
+        new SwingWorker<ResizableImageLabel, Void>() {
+            @Override
+            protected ResizableImageLabel doInBackground() throws Exception {
+                return new ResizableImageLabel(file.getInputStream());
+            }
+
+            @Override
+            protected void done() {
+                ImageFilePreview.this.loading(false);
+                try {
+                    ImageFilePreview.this.initUI(get());
+                } catch (InterruptedException | ExecutionException e) {
+                    ImageFilePreview.this.error(e);
+                }
+            }
+        }.execute();
+    }
+
+    private void loading(boolean loading) {
+        if (loading) {
+            add(loadingLabel);
+        } else {
+            remove(loadingLabel);
+        }
+    }
+
+    private void error(Exception e) {
+        e.printStackTrace();
+        add(new JLabel(e.getMessage(), Icon.OOPS.build(), SwingConstants.CENTER));
+    }
+
+    private void initUI(ResizableImageLabel image) {
+        this.image = image;
         scrollPane = new JScrollPane(image);
 
         Dimension minSize = image.getSameShapedDimension(MIN_SIZE);
-        scrollPane.getViewport().setMinimumSize(minSize);
+        scrollPane.setMinimumSize(minSize);
 
         Dimension prefSize = image.getSameShapedDimension(PREF_SIZE);
-        scrollPane.getViewport().setPreferredSize(new Dimension(
+        scrollPane.setPreferredSize(new Dimension(
                 min(image.getImageWidth(), (int) prefSize.getWidth()),
                 min(image.getImageHeight(), (int) prefSize.getHeight())
         ));
@@ -46,15 +94,13 @@ class ImageFilePreview extends FilePreview {
         panel.add(scrollPane);
         panel.add(toolBar(), BorderLayout.NORTH);
         add(panel);
-    }
 
-    @Override
-    public void setVisible(boolean b) {
-        super.setVisible(b);
-        if (b) {
-            setMinimumSize(getMinimumSize());
-            fitImage();
-        }
+        pack();
+
+        setMinimumSize(getMinimumSize());
+        fitImage();
+
+        WindowPositioningUtils.bringWindowToScreen(this);
     }
 
     private void fitImage() {
