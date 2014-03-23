@@ -1,5 +1,6 @@
 package com.example.preview;
 
+import com.example.components.LoadingLabel;
 import com.example.filelist.FileListEntry;
 import com.example.utils.CloseAction;
 
@@ -18,19 +19,7 @@ import static javax.swing.KeyStroke.getKeyStroke;
  */
 public abstract class FilePreview<T> extends JDialog {
 
-    private static final int LOADING_SIZE = 300;
-
-    private static final Component LOADING = new JLabel(
-            "<html>" +
-                "<div style=\"text-align: center;\">" +
-                    "<div>Loading...</div>" +
-                    "<div>Please wait.</div>" +
-                "</div>" +
-            "</html>"
-    ) {{
-        setHorizontalAlignment(SwingConstants.CENTER);
-        setPreferredSize(new Dimension(LOADING_SIZE, LOADING_SIZE));
-    }};
+    private static final Component LOADING = new LoadingLabel();
 
     private final FileListEntry file;
 

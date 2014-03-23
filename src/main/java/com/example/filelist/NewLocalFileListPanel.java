@@ -1,5 +1,7 @@
 package com.example.filelist;
 
+import com.example.components.CenteredTextLabel;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -11,12 +13,9 @@ class NewLocalFileListPanel extends FileListFactory<LocalFileList> {
     public NewLocalFileListPanel() {
         setName("Local");
         setLayout(new BorderLayout());
-        JLabel label = new JLabel("<html>" +
-                "<div style=\"text-align: center;\">" +
-                "Create a simple local file " +
-                "browser starting at the user home directory." +
-                "</div>" +
-                "</html>");
+        JLabel label = new CenteredTextLabel(
+                "Create a simple local file browser starting at the user home directory."
+        );
         label.setHorizontalAlignment(SwingConstants.CENTER);
         add(label);
     }
