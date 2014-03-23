@@ -18,10 +18,9 @@ class TextFilePreview extends FilePreview {
     public TextFilePreview(FileListEntry file) throws Exception {
         super(file.getName());
 
-        setMinimumSize(new Dimension(MIN_SIZE, MIN_SIZE));
-        setPreferredSize(new Dimension(PREF_SIZE, PREF_SIZE));
-
         JTextPane textPane = new JTextPane();
+        textPane.setMinimumSize(new Dimension(MIN_SIZE, MIN_SIZE));
+        textPane.setPreferredSize(new Dimension(PREF_SIZE, PREF_SIZE));
         InputStream stream = file.getInputStream();
         textPane.read(stream, null);
         stream.close();
