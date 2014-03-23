@@ -22,8 +22,7 @@ public class FilePreviewFactory {
             new ImageFilePreviewBuilder()
     );
 
-    public static FilePreview getPreviewDialogFor(FileListEntry file, Component owner)
-            throws Exception {
+    public static FilePreview getPreviewDialogFor(FileListEntry file, Component owner) {
         String nameLC = file.getName().toLowerCase();
         String mimetype = new MimetypesFileTypeMap().getContentType(nameLC);
         FilePreviewBuilder builder = selectFirst(BUILDERS,

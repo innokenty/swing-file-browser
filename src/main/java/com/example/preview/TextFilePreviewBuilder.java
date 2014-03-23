@@ -13,7 +13,7 @@ class TextFilePreviewBuilder implements FilePreviewBuilder {
     }
 
     @Override
-    public FilePreview getPreviewFor(FileListEntry file) throws Exception {
+    public FilePreview getPreviewFor(FileListEntry file) {
         return new TextFilePreview(file);
     }
 }

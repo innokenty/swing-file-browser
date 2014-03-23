@@ -13,7 +13,7 @@ class ImageFilePreviewBuilder implements FilePreviewBuilder {
     }
 
     @Override
-    public FilePreview getPreviewFor(FileListEntry file) throws Exception {
+    public FilePreview getPreviewFor(FileListEntry file) {
         return new ImageFilePreview(file);
     }
 }

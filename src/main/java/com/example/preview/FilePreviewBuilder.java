@@ -9,5 +9,5 @@ interface FilePreviewBuilder {
 
     boolean supportsMimetype(String mimetype);
 
-    FilePreview getPreviewFor(FileListEntry file) throws Exception;
+    FilePreview getPreviewFor(FileListEntry file);
 }

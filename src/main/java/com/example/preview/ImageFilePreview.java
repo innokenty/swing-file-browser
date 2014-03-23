@@ -8,7 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.concurrent.ExecutionException;
 
 import static java.lang.Math.min;
 
@@ -18,7 +17,7 @@ import static java.lang.Math.min;
  *
  * @author innokenty
  */
-class ImageFilePreview extends FilePreview {
+class ImageFilePreview extends FilePreview<ResizableImageLabel> {
 
     private static final int MIN_SIZE = 400;
 
@@ -29,86 +28,45 @@ class ImageFilePreview extends FilePreview {
 
     private JScrollPane scrollPane;
 
-    private JLabel loadingLabel = new JLabel(
-            "<html>" +
-                "<div style=\"text-align: center;\">" +
-                    "<div>Loading...</div>" +
-                    "<div>Please wait.</div>" +
-                "</div>" +
-            "</html>"
-    ); {
-        loadingLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        loadingLabel.setPreferredSize(new Dimension(300, 300));
+
+    public ImageFilePreview(FileListEntry file) {
+        super(file);
     }
 
-
-    public ImageFilePreview(final FileListEntry file) throws Exception {
-        super(file.getName());
-        loading(true);
-
-        new SwingWorker<ResizableImageLabel, Void>() {
-            @Override
-            protected ResizableImageLabel doInBackground() throws Exception {
-                return new ResizableImageLabel(file.getInputStream());
-            }
-
-            @Override
-            protected void done() {
-                ImageFilePreview.this.loading(false);
-                try {
-                    ImageFilePreview.this.initUI(get());
-                } catch (InterruptedException | ExecutionException e) {
-                    ImageFilePreview.this.error(e);
-                }
-            }
-        }.execute();
+    @Override
+    protected ResizableImageLabel load(FileListEntry file) throws Exception {
+        return new ResizableImageLabel(file.getInputStream());
     }
 
-    private void loading(boolean loading) {
-        if (loading) {
-            add(loadingLabel);
-        } else {
-            remove(loadingLabel);
-        }
-    }
-
-    private void error(Exception e) {
-        e.printStackTrace();
-        add(new JLabel(e.getMessage(), Icon.OOPS.build(), SwingConstants.CENTER));
-    }
-
-    private void initUI(ResizableImageLabel image) {
+    @Override
+    protected synchronized void initUI(ResizableImageLabel image) {
         this.image = image;
-        scrollPane = new JScrollPane(image);
-
-        Dimension minSize = image.getSameShapedDimension(MIN_SIZE);
-        scrollPane.setMinimumSize(minSize);
-
-        Dimension prefSize = image.getSameShapedDimension(PREF_SIZE);
-        scrollPane.setPreferredSize(new Dimension(
-                min(image.getImageWidth(), (int) prefSize.getWidth()),
-                min(image.getImageHeight(), (int) prefSize.getHeight())
-        ));
+        this.scrollPane = scrollPane();
 
         JPanel panel = new JPanel(new BorderLayout());
-        panel.add(scrollPane);
+        panel.add(this.scrollPane);
         panel.add(toolBar(), BorderLayout.NORTH);
         add(panel);
 
         pack();
-
         setMinimumSize(getMinimumSize());
         fitImage();
 
         WindowPositioningUtils.bringWindowToScreen(this);
     }
 
-    private void fitImage() {
-        Insets insets = scrollPane.getInsets();
-        image.fitIn(
-                scrollPane.getWidth() - insets.left - insets.right,
-                scrollPane.getHeight() - insets.top - insets.bottom
-        );
+    private JScrollPane scrollPane() {
+        JScrollPane scrollPane = new JScrollPane(this.image);
+
+        Dimension minSize = this.image.getSameShapedDimension(MIN_SIZE);
+        scrollPane.setMinimumSize(minSize);
+
+        Dimension prefSize = this.image.getSameShapedDimension(PREF_SIZE);
+        scrollPane.setPreferredSize(new Dimension(
+                min(this.image.getImageWidth(), (int) prefSize.getWidth()),
+                min(this.image.getImageHeight(), (int) prefSize.getHeight())
+        ));
+        return scrollPane;
     }
 
     private JToolBar toolBar() {
@@ -118,6 +76,14 @@ class ImageFilePreview extends FilePreview {
         toolBar.add(zoomToPreferredButton());
         toolBar.add(zoomToActualButton());
         return toolBar;
+    }
+
+    private void fitImage() {
+        Insets insets = scrollPane.getInsets();
+        image.fitIn(
+                scrollPane.getWidth() - insets.left - insets.right,
+                scrollPane.getHeight() - insets.top - insets.bottom
+        );
     }
 
     private JButton zoomOutButton() {

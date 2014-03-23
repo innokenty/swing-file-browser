@@ -71,7 +71,7 @@ public abstract class FileList
         }
     }
 
-    private boolean openFile(FileListEntry file) throws Exception {
+    private boolean openFile(FileListEntry file) {
         FilePreview preview = FilePreviewFactory.getPreviewDialogFor(file, this);
         if (preview != null) {
             preview.setVisible(true);
