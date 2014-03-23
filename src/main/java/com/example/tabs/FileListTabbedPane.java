@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * TODO add shortcuts for new tab, close tab, change tab actions
  * @author innokenty
  */
 public class FileListTabbedPane
