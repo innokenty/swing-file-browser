@@ -52,7 +52,7 @@ public class FileListTabbedPane
 
     private void addNewTab(FileList fileList) {
         int index = getTabCount() - 1;
-        insertTab(null, null, new FileListScrollPane(fileList), null, index);
+        insertTab(null, null, fileList, null, index);
         setTabComponentAt(index, new FileListTabButtonComponent(fileList, this));
         setSelectedIndex(index);
         fireListSwitched();
@@ -62,8 +62,8 @@ public class FileListTabbedPane
     @Override
     public FileList getFileList() {
         Component selected = getSelectedComponent();
-        if (selected instanceof FileListScrollPane) {
-            return ((FileListScrollPane) selected).getFileList();
+        if (selected instanceof FileList) {
+            return (FileList) selected;
         } else {
             return null;
         }
@@ -79,20 +79,6 @@ public class FileListTabbedPane
         FileList list = getFileList();
         for (FileListSwitchListener watcher : watchers) {
             watcher.onFileListSwitched(list);
-        }
-    }
-
-    private class FileListScrollPane extends JScrollPane {
-
-        private final FileList fileList;
-
-        public FileListScrollPane(FileList fileList) {
-            super(fileList);
-            this.fileList = fileList;
-        }
-
-        public FileList getFileList() {
-            return fileList;
         }
     }
 }
