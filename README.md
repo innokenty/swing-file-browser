@@ -21,6 +21,7 @@ A simple swing-based file browser with ftp support and files preview.
  1. toggling showing hidden files via toolbar or via menu item
  1. hotkeys support: enter for opening selected item, backspace for going up a tree
  1. zip archive contents browsing without explicit extraction
- 1. opening text and image files (opening files inside archive supported)
+ 1. opening text and image files in a standalone thread (opening files inside archive supported)
+ 1. loading files in a separate worker thread
  1. closing file preview on ESC or on 'Meta + W'
  1. zooming images
