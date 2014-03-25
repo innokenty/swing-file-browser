@@ -1,6 +1,7 @@
 package com.example.filelist;
 
 import com.example.Dialogs;
+import com.example.components.LoadingLabel;
 import com.example.preview.FilePreview;
 import com.example.preview.FilePreviewFactory;
 
@@ -9,6 +10,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.Stack;
+import java.util.concurrent.ExecutionException;
 
 import static com.example.utils.StreamUnzipper.getRandomTempFolder;
 import static com.example.utils.StreamUnzipper.unzip;
@@ -23,16 +25,22 @@ public abstract class FileList
         extends JPanel
         implements FileListModelSwitcher {
 
+    private static final String FILE_LIST_CARD = "file list";
+
+    private static final String LOADING_LABEL_CARD = "loading label";
+
     private final JList<FileListEntry> delegate;
 
-    private Stack<FileListModel> rememberedModels = new Stack<>();
+    private final Stack<FileListModel> rememberedModels = new Stack<>();
 
     public FileList(FileListModel dataModel) {
-        super(new BorderLayout());
+        super(new CardLayout());
         //noinspection unchecked
         delegate = new JList<FileListEntry>(dataModel);
         delegate.setCellRenderer(new FileListEntryRenderer());
-        add(new JScrollPane(delegate));
+        add(new JScrollPane(delegate), FILE_LIST_CARD);
+        add(new LoadingLabel(), LOADING_LABEL_CARD);
+        loading(false);
 
         initTransferFocusToList();
         initOpeningSelectedOnEnter();
@@ -40,6 +48,15 @@ public abstract class FileList
         initGoingUpOnBackspace();
     }
 
+    private void loading(boolean loading) {
+        CardLayout layout = (CardLayout) getLayout();
+        if (loading) {
+            layout.show(this, LOADING_LABEL_CARD);
+        } else {
+            layout.show(this, FILE_LIST_CARD);
+            delegate.requestFocusInWindow();
+        }
+    }
 
     /* WORKING WITH MODEL */
 
@@ -48,16 +65,8 @@ public abstract class FileList
     }
 
     private void openSelected() {
-        FileListEntry file = delegate.getSelectedValue();
-        try {
-            if (!getModel().openFolder(file)
-                    && !openFile(file)
-                    && !openArchive(file)) {
-                Dialogs.sorryBro("Opening this type of files is not supported!", this);
-            }
-        } catch (Exception e) {
-            Dialogs.unexpectedError(e, this);
-        }
+        loading(true);
+        new OpenSelectedWorker(delegate.getSelectedValue(), this).execute();
     }
 
     private boolean openFile(FileListEntry file) {
@@ -144,5 +153,41 @@ public abstract class FileList
                 }
             }
         };
+    }
+
+    private class OpenSelectedWorker extends SwingWorker<Boolean, Void> {
+
+        private FileListEntry file;
+
+        private Component parent;
+
+        private OpenSelectedWorker(FileListEntry file, Component parent) {
+            this.file = file;
+            this.parent = parent;
+        }
+
+        @Override
+        protected Boolean doInBackground() throws Exception {
+            return getModel().openFolder(file)
+                    || openFile(file)
+                    || openArchive(file);
+        }
+
+        @Override
+        protected void done() {
+            loading(false);
+            try {
+                if (!get()) {
+                    Dialogs.sorryBro(
+                            "Opening this type of files is not supported!",
+                            parent
+                    );
+                }
+            } catch (InterruptedException e) {
+                Dialogs.unexpectedError(e, parent);
+            } catch (ExecutionException e) {
+                Dialogs.unexpectedError(e.getCause(), parent);
+            }
+        }
     }
 }
