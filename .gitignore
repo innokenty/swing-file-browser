@@ -7,3 +7,5 @@ target
 *.jar
 *.war
 *.ear
+
+swing-file-browser.properties

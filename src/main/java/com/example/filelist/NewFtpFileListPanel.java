@@ -13,6 +13,7 @@ import static org.cthul.matchers.CthulMatchers.matchesPattern;
 import static org.hamcrest.Matchers.*;
 
 /**
+ * TODO add multiple settings bundles support
  * @author innokenty
  */
 class NewFtpFileListPanel extends FileListFactory<FtpFileList> {
@@ -30,10 +31,10 @@ class NewFtpFileListPanel extends FileListFactory<FtpFileList> {
     private static class FileTypeOptions extends LinkedHashMap<String, Integer> {
 
         {
-            put("ASCII FILE TYPE", FTP.ASCII_FILE_TYPE);
-            put("BINARY FILE TYPE", FTP.BINARY_FILE_TYPE);
-            put("EBCDIC FILE TYPE", FTP.EBCDIC_FILE_TYPE);
-            put("LOCAL FILE TYPE", FTP.LOCAL_FILE_TYPE);
+            put("ASCII", FTP.ASCII_FILE_TYPE);
+            put("binary", FTP.BINARY_FILE_TYPE);
+            put("EBCDIC", FTP.EBCDIC_FILE_TYPE);
+            put("local", FTP.LOCAL_FILE_TYPE);
         }
 
         public String[] getKeysAsArray() {
@@ -45,27 +46,24 @@ class NewFtpFileListPanel extends FileListFactory<FtpFileList> {
     private static final FileTypeOptions FILE_TYPE_OPTIONS = new FileTypeOptions();
 
     private final JTextField hostname;
-
     private final JTextField port;
-
     private final JCheckBox ftps;
-
     private final JTextField username;
-
     private final JPasswordField password;
-
     private final JComboBox<String> fileType;
 
     public NewFtpFileListPanel() {
         setName("FTP");
         setLayout(new SpringLayout());
 
+        FtpConnectionProperties props = new FtpConnectionProperties();
+
         JLabel hostnameLabel = new JLabel(
                 "<html>hostname <font color=\"red\">*</font></html>",
                 JLabel.TRAILING
         );
         add(hostnameLabel);
-        hostname = new JTextField();
+        hostname = new JTextField(props.getHost());
         hostnameLabel.setLabelFor(hostname);
         add(hostname);
 
@@ -75,31 +73,33 @@ class NewFtpFileListPanel extends FileListFactory<FtpFileList> {
         format.setMinimumIntegerDigits(1);
         format.setMaximumIntegerDigits(4);
         port = new JFormattedTextField(format);
-        port.setText(String.valueOf(FTP.DEFAULT_PORT));
+        port.setText(String.valueOf(props.getPort()));
         portLabel.setLabelFor(port);
         add(port);
 
         JLabel ftpsLabel = new JLabel("ftps", JLabel.TRAILING);
         add(ftpsLabel);
         ftps = new JCheckBox();
+        ftps.setSelected(props.isFtps());
         ftpsLabel.setLabelFor(ftps);
         add(ftps);
 
         JLabel usernameLabel = new JLabel("username", JLabel.TRAILING);
         add(usernameLabel);
-        username = new JTextField();
+        username = new JTextField(props.getUsername());
         usernameLabel.setLabelFor(username);
         add(username);
 
         JLabel passwordLabel = new JLabel("password", JLabel.TRAILING);
         add(passwordLabel);
-        password = new JPasswordField();
+        password = new JPasswordField(props.getPassword());
         passwordLabel.setLabelFor(password);
         add(password);
 
         JLabel fileTypeLabel = new JLabel("fileType", JLabel.TRAILING);
         add(fileTypeLabel);
         fileType = new JComboBox<>(FILE_TYPE_OPTIONS.getKeysAsArray());
+        fileType.setSelectedItem(props.getFileType());
         fileTypeLabel.setLabelFor(fileType);
         add(fileType);
 
