@@ -49,3 +49,12 @@ There are three options to specify each property listed in the previous section:
 
 If any property is specified in multiple sources of the above,
 the upper source in the list gets the priority.
+
+### swing-file-browser.properties file example
+```
+host=ftp.example.com
+ftps=true
+username=innokenty
+password=P@$5w0r† 
+file.type=local
+```
