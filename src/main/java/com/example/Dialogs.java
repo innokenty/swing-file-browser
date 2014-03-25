@@ -18,18 +18,18 @@ public class Dialogs {
         );
     }
 
-    public static void unexpectedError(Exception e, Component parent) {
-        error(e.getMessage(), e, parent);
+    public static void unexpectedError(Throwable t, Component parent) {
+        error(t.getMessage(), t, parent);
     }
 
-    public static void error(String title, Throwable e, Component parent) {
+    public static void error(String title, Throwable t, Component parent) {
         JOptionPane.showMessageDialog(
                 parent,
-                e.getMessage(),
+                t.getMessage(),
                 title,
                 JOptionPane.ERROR_MESSAGE,
                 Icon.OOPS.build()
         );
-        e.printStackTrace();
+        t.printStackTrace();
     }
 }
