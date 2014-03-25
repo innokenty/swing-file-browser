@@ -32,16 +32,14 @@ A simple swing-based file browser with ftp support and files preview.
 
 ### Properties list
 
---------------+---------+-------------------+---------------+
-property name | type    | value example     | default value |
---------------+---------+-------------------+---------------+
-host          | string  | ftp.example.com   | –             |
-port          | int     | 69                | 21            |
-ftps          | boolean | true              | false         |
-username      | string  | innokenty         | -             |
-password      | string  | |)@$5w0r†         | -             |
-file.type     | [binary|ASCII|EBCDIC|local] | ASCII         |
---------------+-----------------------------+---------------+
+property name | type                                  | value example     | default value
+------------- | ------------------------------------- | ----------------- | -------------
+host          | string                                | ftp.example.com   | –
+port          | int                                   | 69                | 21
+ftps          | boolean                               | true              | false
+username      | string                                | innokenty         | -
+password      | string                                | P@$5w0r†          | -
+file.type     | one of {binary, ASCII, EBCDIC, local} | binary             | ASCII
 
 ### Setting properties
 There are three options to specify each property listed in the previous section:
