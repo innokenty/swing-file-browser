@@ -1496,7 +1496,7 @@ text/x-sfv					sfv
 text/x-uuencode					uu
 text/x-vcalendar				vcs
 text/x-vcard					vcf
-# text/xml
+text/xml					xml
 # text/xml-external-parsed-entity
 # video/1d-interleaved-parityfec
 video/3gpp					3gp
