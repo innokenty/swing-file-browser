@@ -14,7 +14,8 @@ A simple swing-based file browser with ftp support and files preview.
 
 ## Features
  1. local & ftp files browsing
- 1. ftp host:port, ftps, file encoding and anonymous login settings
+ 1. ftp host:port, ftps, file encoding settings
+ 1. anonymous login support
  1. storing preferred ftp connection settings in a properties file
  1. file and directory icons based on the underlying system ui
  1. list entry go up a tree on the top
