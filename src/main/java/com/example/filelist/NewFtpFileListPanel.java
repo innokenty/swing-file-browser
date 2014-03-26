@@ -6,6 +6,8 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.hamcrest.Matcher;
 
 import javax.swing.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.text.DecimalFormat;
 import java.util.LinkedHashMap;
 
@@ -44,6 +46,8 @@ class NewFtpFileListPanel extends FileListFactory<FtpFileList> {
 
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private static final FileTypeOptions FILE_TYPE_OPTIONS = new FileTypeOptions();
+
+    private static final String ANONYMOUS = "anonymous";
 
     private final JTextField hostname;
     private final JTextField port;
@@ -88,6 +92,14 @@ class NewFtpFileListPanel extends FileListFactory<FtpFileList> {
         add(usernameLabel);
         username = new JTextField(props.getUsername());
         usernameLabel.setLabelFor(username);
+        username.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (username.getText().isEmpty()) {
+                    username.setText(ANONYMOUS);
+                }
+            }
+        });
         add(username);
 
         JLabel passwordLabel = new JLabel("password", JLabel.TRAILING);
@@ -160,11 +172,13 @@ class NewFtpFileListPanel extends FileListFactory<FtpFileList> {
                 getHostname(),
                 matchesPattern(HOSTNAME_REGEX)
         );
-        assertThat(
-                "username and password must be either both filled or both empty!",
-                getUsername().isEmpty(),
-                is(equalTo(getPassword().isEmpty()))
-        );
+        if (!ANONYMOUS.equals(getUsername())) {
+            assertThat(
+                    "username and password must be either both filled or both empty!",
+                    getUsername().isEmpty(),
+                    is(equalTo(getPassword().isEmpty()))
+            );
+        }
     }
 
     private <T> void assertThat(String message, T actual, Matcher<T> matcher)
