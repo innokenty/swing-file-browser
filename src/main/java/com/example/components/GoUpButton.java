@@ -5,7 +5,6 @@ import com.example.FileListContainer;
 import com.example.FileListSwitchListener;
 import com.example.Icon;
 import com.example.filelist.FileList;
-import com.example.filelist.FileListModel;
 import com.example.utils.AbstractListDataListener;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,7 +31,7 @@ public class GoUpButton extends JButton {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    if (!container.getFileList().getModel().goUp()) {
+                    if (!container.getFileList().goUp()) {
                         Dialogs.sorryBro(
                                 "This is the top-level folder already! " +
                                         "Or something's broken...",
@@ -60,10 +59,9 @@ public class GoUpButton extends JButton {
                     return;
                 }
 
-                GoUpButton.super.setEnabled(newFileList.getModel().canGoUp());
-                FileListModel model = newFileList.getModel();
-                model.removeListDataListener(canGoUpListener);
-                model.addListDataListener(canGoUpListener);
+                GoUpButton.super.setEnabled(newFileList.canGoUp());
+                newFileList.removeListDataListener(canGoUpListener);
+                newFileList.addListDataListener(canGoUpListener);
             }
         });
     }
@@ -74,7 +72,7 @@ public class GoUpButton extends JButton {
             @Override
             public void contentsChanged(ListDataEvent e) {
                 GoUpButton.super.setEnabled(
-                        container.getFileList().getModel().canGoUp()
+                        container.getFileList().canGoUp()
                 );
             }
         };

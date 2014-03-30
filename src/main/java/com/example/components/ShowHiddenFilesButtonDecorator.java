@@ -5,7 +5,6 @@ import com.example.Dialogs;
 import com.example.FileListContainer;
 import com.example.FileListSwitchListener;
 import com.example.filelist.FileList;
-import com.example.filelist.FileListModel;
 import com.example.utils.AbstractListDataListener;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,9 +27,9 @@ class ShowHiddenFilesButtonDecorator {
         this.listContainer = listContainer;
     }
 
-    private void setShowHiddenFiles(boolean show, FileListModel model) {
+    private void setShowHiddenFiles(boolean show, FileList fileList) {
         try {
-            model.setShowHiddenFiles(show);
+            fileList.setShowHiddenFiles(show);
         } catch (Exception e1) {
             Dialogs.unexpectedError(e1, listContainer.getFileList());
         }
@@ -48,7 +47,7 @@ class ShowHiddenFilesButtonDecorator {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 boolean show = e.getStateChange() == ItemEvent.SELECTED;
-                setShowHiddenFiles(show, listContainer.getFileList().getModel());
+                setShowHiddenFiles(show, listContainer.getFileList());
             }
         });
     }
@@ -64,16 +63,15 @@ class ShowHiddenFilesButtonDecorator {
                 }
 
                 button.setEnabled(true);
-                FileListModel model = newFileList.getModel();
 
                 if (Defaults.BUTTON_STATE_CHANGES_ON_LIST_CHANGE) {
-                    button.setSelected(model.isShowingHiddenFiles());
+                    button.setSelected(newFileList.isShowingHiddenFiles());
                 } else {
-                    setShowHiddenFiles(button.isSelected(), model);
+                    setShowHiddenFiles(button.isSelected(), newFileList);
                 }
 
-                model.removeListDataListener(listener);
-                model.addListDataListener(listener);
+                newFileList.removeListDataListener(listener);
+                newFileList.addListDataListener(listener);
             }
         });
     }
@@ -82,8 +80,7 @@ class ShowHiddenFilesButtonDecorator {
         return new AbstractListDataListener() {
             @Override
             public void contentsChanged(ListDataEvent e) {
-                boolean showing = listContainer.getFileList().getModel()
-                        .isShowingHiddenFiles();
+                boolean showing = listContainer.getFileList().isShowingHiddenFiles();
                 if (button.isSelected() != showing) {
                     button.setSelected(showing);
                 }

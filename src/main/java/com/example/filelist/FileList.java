@@ -6,6 +6,7 @@ import com.example.preview.FilePreview;
 import com.example.preview.FilePreviewFactory;
 
 import javax.swing.*;
+import javax.swing.event.ListDataListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -64,6 +65,13 @@ public abstract class FileList
         return (FileListModel<FileListEntry>) delegate.getModel();
     }
 
+    private void setModel(FileListModel newModel) {
+        newModel.addListDataListeners(getModel().getListDataListeners());
+        //noinspection unchecked
+        delegate.setModel(newModel);
+        fireContentsChanged();
+    }
+
     private void openSelected() {
         loading(true);
         new OpenSelectedWorker(delegate.getSelectedValue(), this).execute();
@@ -84,17 +92,49 @@ public abstract class FileList
         boolean unzippedSuccessfully = unzip(file.getInputStream(), tmp);
         if (unzippedSuccessfully) {
             rememberedModels.push(getModel());
-            ListModel model = new TempFolderFileListModel(tmp, file.getName(), this);
-            //noinspection unchecked
-            delegate.setModel(model);
+            setModel(new TempFolderFileListModel(tmp, file.getName(), this));
         }
         return unzippedSuccessfully;
     }
 
     @Override
     public void switchBack() {
-        //noinspection unchecked
-        delegate.setModel(rememberedModels.pop());
+        setModel(rememberedModels.pop());
+    }
+
+
+    /* DELEGATED MODEL METHODS */
+
+    public boolean canGoUp() {
+        return getModel().canGoUp();
+    }
+
+    public boolean goUp() throws Exception {
+        return getModel().goUp();
+    }
+
+    public boolean isShowingHiddenFiles() {
+        return getModel().isShowingHiddenFiles();
+    }
+
+    public void setShowHiddenFiles(boolean showHiddenFiles) throws Exception {
+        getModel().setShowHiddenFiles(showHiddenFiles);
+    }
+
+    public String getCurrentFolderName() {
+        return getModel().getCurrentFolderName();
+    }
+
+    public void addListDataListener(ListDataListener l) {
+        getModel().addListDataListener(l);
+    }
+
+    public void removeListDataListener(ListDataListener l) {
+        getModel().removeListDataListener(l);
+    }
+
+    public void fireContentsChanged() {
+        getModel().fireContentsChanged();
     }
 
     /* GUI INITIALIZATION METHODS */
@@ -147,7 +187,7 @@ public abstract class FileList
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    getModel().goUp();
+                    goUp();
                 } catch (Exception ex) {
                     Dialogs.unexpectedError(ex, FileList.this);
                 }

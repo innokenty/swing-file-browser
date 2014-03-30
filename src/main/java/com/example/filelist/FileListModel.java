@@ -1,11 +1,16 @@
 package com.example.filelist;
 
 import javax.swing.*;
+import javax.swing.event.ListDataListener;
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.Arrays.asList;
 
 /**
  * @author innokenty
  */
-public abstract class FileListModel<T extends FileListEntry>
+abstract class FileListModel<T extends FileListEntry>
         extends DefaultListModel<FileListEntry> {
 
     public final boolean openFolder(FileListEntry folder) throws Exception {
@@ -28,6 +33,14 @@ public abstract class FileListModel<T extends FileListEntry>
             }
         }
         return false;
+    }
+
+    public void addListDataListeners(ListDataListener[] listeners) {
+        List<ListDataListener> thatListeners = new ArrayList<>(asList(listeners));
+        thatListeners.removeAll(asList(getListDataListeners()));
+        for (ListDataListener listener : thatListeners) {
+            addListDataListener(listener);
+        }
     }
 
     public final boolean goUp() throws Exception {
