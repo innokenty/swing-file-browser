@@ -1,5 +1,6 @@
 package com.example.preview;
 
+import com.example.Icon;
 import com.example.components.LoadingLabel;
 import com.example.filelist.FileListEntry;
 import com.example.utils.CloseAction;
@@ -13,6 +14,7 @@ import static java.awt.event.KeyEvent.VK_ESCAPE;
 import static java.awt.event.KeyEvent.VK_W;
 import static javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW;
 import static javax.swing.KeyStroke.getKeyStroke;
+import static javax.swing.SwingConstants.CENTER;
 
 /**
  * @author innokenty
@@ -22,7 +24,6 @@ public abstract class FilePreview<T> extends JDialog {
     private static final Component LOADING = new LoadingLabel();
 
     private final FileListEntry file;
-
 
     public FilePreview(final FileListEntry file) {
         this.file = file;
@@ -74,7 +75,7 @@ public abstract class FilePreview<T> extends JDialog {
 
     private void error(Exception e) {
         e.printStackTrace();
-        add(new JLabel(e.getMessage(), com.example.Icon.OOPS.build(), SwingConstants.CENTER));
+        add(new JLabel(e.getMessage(), Icon.OOPS.build(), CENTER));
     }
 
     protected abstract T load(FileListEntry file) throws Exception;
