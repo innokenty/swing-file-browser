@@ -56,6 +56,7 @@ public abstract class FilePreview<T> extends JDialog {
         }.execute();
     }
 
+    // TODO fix, this is not always working somehow!
     private void bindCloseShortcuts() {
         String dispatchDialogKey = "com.example.FilePreview.dispatch";
         JRootPane root = getRootPane();
