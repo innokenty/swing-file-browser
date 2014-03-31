@@ -34,6 +34,8 @@ public abstract class FileList
 
     private final Stack<FileListModel> rememberedModels = new Stack<>();
 
+    private final Stack<Integer> selectionIndices = new Stack<>();
+
     public FileList(FileListModel dataModel) {
         super(new CardLayout());
         //noinspection unchecked
@@ -77,6 +79,16 @@ public abstract class FileList
         new OpenSelectedWorker(delegate.getSelectedValue(), this).execute();
     }
 
+    private boolean openFolder(FileListEntry file) throws Exception {
+        int selectedIndex = delegate.getSelectedIndex();
+        boolean result = getModel().openFolder(file);
+        if (result) {
+            selectionIndices.push(selectedIndex);
+            delegate.setSelectedIndex(0);
+        }
+        return result;
+    }
+
     private boolean openFile(FileListEntry file) {
         FilePreview preview = FilePreviewFactory.getPreviewDialogFor(file, this);
         if (preview != null) {
@@ -92,7 +104,9 @@ public abstract class FileList
         boolean unzippedSuccessfully = unzip(file.getInputStream(), tmp);
         if (unzippedSuccessfully) {
             rememberedModels.push(getModel());
+            selectionIndices.push(delegate.getSelectedIndex());
             setModel(new TempFolderFileListModel(tmp, file.getName(), this));
+            delegate.setSelectedIndex(0);
         }
         return unzippedSuccessfully;
     }
@@ -100,6 +114,7 @@ public abstract class FileList
     @Override
     public void switchBack() {
         setModel(rememberedModels.pop());
+        delegate.setSelectedIndex(selectionIndices.pop());
     }
 
 
@@ -110,7 +125,15 @@ public abstract class FileList
     }
 
     public boolean goUp() throws Exception {
-        return getModel().goUp();
+        boolean result = getModel().goUp();
+        if (result) {
+            if (selectionIndices.isEmpty()) {
+                delegate.setSelectedIndex(0);
+            } else {
+                delegate.setSelectedIndex(selectionIndices.pop());
+            }
+        }
+        return result;
     }
 
     public boolean isShowingHiddenFiles() {
@@ -208,7 +231,7 @@ public abstract class FileList
 
         @Override
         protected Boolean doInBackground() throws Exception {
-            return getModel().openFolder(file)
+            return openFolder(file)
                     || openFile(file)
                     || openArchive(file);
         }
