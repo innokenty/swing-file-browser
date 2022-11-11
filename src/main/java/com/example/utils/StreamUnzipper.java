@@ -23,6 +23,9 @@ public class StreamUnzipper {
         while ((entry = zis.getNextEntry()) != null) {
             isEmpty = false;
             File newFile = new File(outputFolder, entry.getName());
+            if (!newFile.toPath().normalize().startsWith(outputFolder.toPath().normalize())) {
+                throw new IOException("Bad zip entry");
+            }
             if (newFile.getParentFile().mkdirs() && !entry.isDirectory()) {
                 FileOutputStream fos = new FileOutputStream(newFile);
                 IOUtils.copy(zis, fos);
